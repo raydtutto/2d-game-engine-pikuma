@@ -1,6 +1,9 @@
 # IDEAs
 .idea
 
+# MacOS Finder config file
+.DS_Store
+
 # see https://github.com/TheNetAdmin/Makefile-Templates/blob/master/.gitignore
 .vscode
 
