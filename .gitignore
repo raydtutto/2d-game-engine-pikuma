@@ -85,3 +85,4 @@ dkms.conf
 
 # build files
 game
+cmake-build-*
