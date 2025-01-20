@@ -1,9 +1,11 @@
-#include <iostream>
-#include <SDL.h>
+#include "Game.h"
 
-int main() {
-    // Initialize SDL library
-    SDL_Init(SDL_INIT_EVERYTHING);
-    std::cout << "Hello, world!" << std::endl;
+int main(int argc, char* argv[]) {
+    Game game;
+
+    game.Initialize();
+    game.Run();
+    game.Destroy();
+
     return 0;
 }
