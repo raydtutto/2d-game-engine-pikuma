@@ -19,27 +19,41 @@ void Game::Initialize() {
         return;
     }
 
-    // Create a window (pointer to a struct)
+    // ---- Fake fullscreen (pointer to a struct) - Start -------------------------------
+
+    // Get the window width/height
+    SDL_DisplayMode displayMode;
+    SDL_GetCurrentDisplayMode(0, &displayMode); // Get and set the data to display object
+    windowWidth = 800; // Use `displayMode.w` to get the window width
+    windowHeight = 600; // Use `displayMode.h` to get the window width
+
+    // Create a window
     window = SDL_CreateWindow(
         NULL, // NULL for title for not having screen borders
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        800,
-        600,
+        windowWidth,
+        windowHeight,
         SDL_WINDOW_BORDERLESS
     );
+    // Check window
     if (!window) {
         std::cerr << "Error creating SDL window." << std::endl;
         return;
     }
 
+    // ---- Fake fullscreen - END --------------------------------------------------------
+
     // Create renderer
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0 | SDL_RENDERER_PRESENTVSYNC);
     // `-1` means "get the default" display number in this case, `0` - for no flags
     if (!renderer) {
         std::cerr << "Error creating SDL renderer." << std::endl;
         return;
     }
+
+    // Make a real fullscreen from a fake one
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
     isRunning = true;
 }
