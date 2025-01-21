@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <glm/glm.hpp>
 #include <iostream>
 
 
@@ -54,7 +55,7 @@ void Game::Initialize() {
     }
 
     // Make a real fullscreen from a fake one
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    // SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
     isRunning = true;
 }
@@ -76,16 +77,31 @@ void Game::ProcessInput() {
     }
 }
 
+// Declare player position globally
+glm::vec2 playerPosition;
+glm::vec2 playerVelocity;
+
 void Game::Setup() {
-    // TODO: Initialize game objects
+    // Set start position of an object
+    playerPosition = glm::vec2(10.0, 10.0);
+    // Set object velocity
+    playerVelocity = glm::vec2(0.5,0.0);
 }
 
 void Game::Update() {
-    // TODO: update game objects
+    // Cap framerate
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), msPrevFrame + MS_PER_FRAME));
+
+    // Store the current frame time
+    msPrevFrame = SDL_GetTicks();
+
+    // Update player position
+    playerPosition.x += playerVelocity.x;
+    playerPosition.y += playerVelocity.y;
 }
 
 void Game::Render() {
-    SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
+    SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
     SDL_RenderClear(renderer);
 
     // Draw a PNG texture
@@ -94,7 +110,12 @@ void Game::Render() {
     SDL_FreeSurface(surface); // once we get the texture, we don't need a surface
 
     // Draw texture in renderer
-    SDL_Rect dstRect = {10,10,32,32}; // destination rectangle for PNG texture
+    SDL_Rect dstRect = { // destination rectangle for PNG texture
+        static_cast<int>(playerPosition.x), // convert float to int
+        static_cast<int>(playerPosition.y), // convert float to int
+        32,
+        32
+    };
     SDL_RenderCopy(renderer, texture, NULL, &dstRect); // copy an entire texture to the destination
     SDL_DestroyTexture(texture);
 

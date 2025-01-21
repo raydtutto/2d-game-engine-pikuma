@@ -2,9 +2,13 @@
 #define GAME_H
 #include <SDL.h>
 
+constexpr int FPS = 60;
+constexpr int MS_PER_FRAME = 1000 / FPS;
+
 class Game {
 private:
     bool isRunning;
+    int msPrevFrame = MS_PER_FRAME;
     SDL_Window *window;
     SDL_Renderer *renderer;
 
