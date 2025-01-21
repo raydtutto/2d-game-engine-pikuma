@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
 
@@ -85,22 +86,19 @@ void Game::Update() {
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
-    SDL_RenderClear(renderer); //clear color
+    SDL_RenderClear(renderer);
 
-    // TODO: render game objects
+    // Draw a PNG texture
+    SDL_Surface* surface = IMG_Load("../assets/images/tank-tiger-right.png"); // creates surface
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface); // create texture from surface
+    SDL_FreeSurface(surface); // once we get the texture, we don't need a surface
 
-    // ---- Rectangle - START --------------------------------------------------------
+    // Draw texture in renderer
+    SDL_Rect dstRect = {10,10,32,32}; // destination rectangle for PNG texture
+    SDL_RenderCopy(renderer, texture, NULL, &dstRect); // copy an entire texture to the destination
+    SDL_DestroyTexture(texture);
 
-    // Create a rectangle
-    SDL_Rect player = { 10, 10, 20, 20 };
-    // Set color
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    // Draw a rectangle (destination, &object)
-    SDL_RenderFillRect(renderer, &player);
-
-    // ---- Rectangle - END --------------------------------------------------------
-
-    SDL_RenderPresent(renderer); // present to display
+    SDL_RenderPresent(renderer);
 }
 
 void Game::Run() {
