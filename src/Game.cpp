@@ -85,7 +85,7 @@ void Game::Setup() {
     // Set start position of an object
     playerPosition = glm::vec2(10.0, 10.0);
     // Set object velocity
-    playerVelocity = glm::vec2(0.5,0.0);
+    playerVelocity = glm::vec2(100.0,0.0); // every second move `x` pixels to right/left, `y` pixels up/down
 }
 
 void Game::Update() {
@@ -95,12 +95,15 @@ void Game::Update() {
         SDL_Delay(timeToWait); // wait
     }
 
+    // Delta time - difference in ticks since the last frame, converted to seconds
+    double deltaTime = (SDL_GetTicks() - msPrevFrame) / 1000.0;
+
     // Store the current frame time
     msPrevFrame = SDL_GetTicks();
 
     // Update player position
-    playerPosition.x += playerVelocity.x;
-    playerPosition.y += playerVelocity.y;
+    playerPosition.x += playerVelocity.x * deltaTime;
+    playerPosition.y += playerVelocity.y * deltaTime;
 }
 
 void Game::Render() {
