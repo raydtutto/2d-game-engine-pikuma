@@ -90,7 +90,10 @@ void Game::Setup() {
 
 void Game::Update() {
     // Cap framerate
-    while (!SDL_TICKS_PASSED(SDL_GetTicks(), msPrevFrame + MS_PER_FRAME));
+    int timeToWait = MS_PER_FRAME - (SDL_GetTicks() - msPrevFrame); // calculate how much to wait
+    if (timeToWait > 0 && timeToWait <= MS_PER_FRAME) {
+        SDL_Delay(timeToWait); // wait
+    }
 
     // Store the current frame time
     msPrevFrame = SDL_GetTicks();
