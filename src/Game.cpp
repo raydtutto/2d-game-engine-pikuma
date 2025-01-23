@@ -1,46 +1,42 @@
 #include "Game.h"
+
+#include "Logger.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <glm/glm.hpp>
-#include <iostream>
-
 
 Game::Game() {
     isRunning = false;
-    std::cout << "Game constructor called." << std::endl;
+    Logger::Log("Game constructor called.");
 }
 
 Game::~Game() {
-    std::cout << "Game destructor called." << std::endl;
+    Logger::Log("Game destructor called.");
 }
 
 void Game::Initialize() {
     // Avoid SDL error
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "Error initializing SDL." << std::endl;
+        Logger::Error("Error initializing SDL.");
         return;
     }
 
-    // ---- Fake fullscreen (pointer to a struct) - Start -------------------------------
+    // ---- Fake fullscreen - START ------------------------------------------------------
 
     // Get the window width/height
     SDL_DisplayMode displayMode;
-    SDL_GetCurrentDisplayMode(0, &displayMode); // Get and set the data to display object
-    windowWidth = 800; // Use `displayMode.w` to get the window width
-    windowHeight = 600; // Use `displayMode.h` to get the window width
+    SDL_GetCurrentDisplayMode(0, &displayMode);  // Get and set the data to display object
+    windowWidth = 800;                           // Use `displayMode.w` to get the window width
+    windowHeight = 600;                          // Use `displayMode.h` to get the window width
 
     // Create a window
-    window = SDL_CreateWindow(
-        NULL, // NULL for title for not having screen borders
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        windowWidth,
-        windowHeight,
-        SDL_WINDOW_BORDERLESS
-    );
+    window = SDL_CreateWindow(NULL,  // NULL for title for not having screen borders
+                              SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth,
+                              windowHeight, SDL_WINDOW_BORDERLESS);
     // Check window
     if (!window) {
-        std::cerr << "Error creating SDL window." << std::endl;
+        Logger::Error("Error creating SDL window.");
         return;
     }
 
@@ -50,7 +46,7 @@ void Game::Initialize() {
     renderer = SDL_CreateRenderer(window, -1, 0 | SDL_RENDERER_PRESENTVSYNC);
     // `-1` means "get the default" display number in this case, `0` - for no flags
     if (!renderer) {
-        std::cerr << "Error creating SDL renderer." << std::endl;
+        Logger::Error("Error creating SDL renderer.");
         return;
     }
 
@@ -65,13 +61,12 @@ void Game::ProcessInput() {
     while (SDL_PollEvent(&sdlEvent)) {
         // passing address
         switch (sdlEvent.type) {
-            case SDL_QUIT: // event when user tries to close the window
+            case SDL_QUIT:  // event when user tries to close the window
                 isRunning = false;
                 break;
             case SDL_KEYDOWN:
-                if (sdlEvent.key.keysym.sym == SDLK_ESCAPE) {
+                if (sdlEvent.key.keysym.sym == SDLK_ESCAPE)
                     isRunning = false;
-                }
                 break;
         }
     }
@@ -85,15 +80,15 @@ void Game::Setup() {
     // Set start position of an object
     playerPosition = glm::vec2(10.0, 10.0);
     // Set object velocity
-    playerVelocity = glm::vec2(100.0,0.0); // every second move `x` pixels to right/left, `y` pixels up/down
+    playerVelocity = glm::vec2(100.0, 0.0);  // every second move `x` pixels to right/left, `y`
+                                             // pixels up/down
 }
 
 void Game::Update() {
     // Cap framerate
-    int timeToWait = MS_PER_FRAME - (SDL_GetTicks() - msPrevFrame); // calculate how much to wait
-    if (timeToWait > 0 && timeToWait <= MS_PER_FRAME) {
-        SDL_Delay(timeToWait); // wait
-    }
+    int timeToWait = MS_PER_FRAME - (SDL_GetTicks() - msPrevFrame);  // calculate how much to wait
+    if (timeToWait > 0 && timeToWait <= MS_PER_FRAME)
+        SDL_Delay(timeToWait);  // wait
 
     // Delta time - difference in ticks since the last frame, converted to seconds
     double deltaTime = (SDL_GetTicks() - msPrevFrame) / 1000.0;
@@ -111,18 +106,18 @@ void Game::Render() {
     SDL_RenderClear(renderer);
 
     // Draw a PNG texture
-    SDL_Surface* surface = IMG_Load("../assets/images/tank-tiger-right.png"); // creates surface
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface); // create texture from surface
-    SDL_FreeSurface(surface); // once we get the texture, we don't need a surface
+    SDL_Surface* surface = IMG_Load("../assets/images/tank-tiger-right.png");  // creates surface
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);  // create texture from
+                                                                             // surface
+    SDL_FreeSurface(surface);  // once we get the texture, we don't need a surface
 
     // Draw texture in renderer
     SDL_Rect dstRect = { // destination rectangle for PNG texture
-        static_cast<int>(playerPosition.x), // convert float to int
-        static_cast<int>(playerPosition.y), // convert float to int
-        32,
-        32
+                         static_cast<int>(playerPosition.x),  // convert float to int
+                         static_cast<int>(playerPosition.y),  // convert float to int
+                         32, 32
     };
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect); // copy an entire texture to the destination
+    SDL_RenderCopy(renderer, texture, NULL, &dstRect);  // copy an entire texture to the destination
     SDL_DestroyTexture(texture);
 
     SDL_RenderPresent(renderer);
