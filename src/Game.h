@@ -9,8 +9,8 @@ class Game {
 private:
     bool isRunning;
     int msPrevFrame = MS_PER_FRAME;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
 
 public:
     // API - Application programming interface - START ---------------------------------------
@@ -30,4 +30,4 @@ public:
     int windowHeight;
 };
 
-#endif //GAME_H
+#endif  // GAME_H
