@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "Logger.h"
+#include "../Logger/Logger.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
