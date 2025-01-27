@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "../ECS/ECS.h"
 #include "../Logger/Logger.h"
 
 #include <SDL.h>
@@ -72,16 +73,12 @@ void Game::ProcessInput() {
     }
 }
 
-// Declare player position globally
-glm::vec2 playerPosition;
-glm::vec2 playerVelocity;
-
 void Game::Setup() {
-    // Set start position of an object
-    playerPosition = glm::vec2(10.0, 10.0);
-    // Set object velocity
-    playerVelocity = glm::vec2(100.0, 0.0);  // every second move `x` pixels to right/left, `y`
-                                             // pixels up/down
+    // TODO:
+    // Entity tank = registry.CreateEntity();
+    // tank.AddComponent<TransformComponent>();
+    // tank.AddComponent<BoxColliderComponent>();
+    // tank.AddComponent<SpriteComponent>("./assets/images/tank.png");
 }
 
 void Game::Update() {
@@ -96,29 +93,17 @@ void Game::Update() {
     // Store the current frame time
     msPrevFrame = SDL_GetTicks();
 
-    // Update player position
-    playerPosition.x += playerVelocity.x * deltaTime;
-    playerPosition.y += playerVelocity.y * deltaTime;
+    // TODO:
+    // MovementSystem.Update();
+    // CollisionSystem.Update();
+    // DamageSystem.Update();
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
     SDL_RenderClear(renderer);
 
-    // Draw a PNG texture
-    SDL_Surface* surface = IMG_Load("../assets/images/tank-tiger-right.png");  // creates surface
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);  // create texture from
-                                                                             // surface
-    SDL_FreeSurface(surface);  // once we get the texture, we don't need a surface
-
-    // Draw texture in renderer
-    SDL_Rect dstRect = { // destination rectangle for PNG texture
-                         static_cast<int>(playerPosition.x),  // convert float to int
-                         static_cast<int>(playerPosition.y),  // convert float to int
-                         32, 32
-    };
-    SDL_RenderCopy(renderer, texture, NULL, &dstRect);  // copy an entire texture to the destination
-    SDL_DestroyTexture(texture);
+    // TODO: Render game objects
 
     SDL_RenderPresent(renderer);
 }
