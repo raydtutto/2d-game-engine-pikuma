@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #include <SDL.h>
+#include "ECS/ECS.h"
 
 constexpr int FPS = 60;
 constexpr int MS_PER_FRAME = 1000 / FPS;
@@ -11,6 +12,8 @@ private:
     int msPrevFrame = MS_PER_FRAME;
     SDL_Window* window;
     SDL_Renderer* renderer;
+
+    Registry* registry;
 
 public:
     // API - Application programming interface - START ---------------------------------------
@@ -24,7 +27,7 @@ public:
     void Update();
     void Render();
     void Destroy();
-    // API - END -----------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------
 
     int windowWidth;
     int windowHeight;

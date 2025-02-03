@@ -1,7 +1,7 @@
 #ifndef MOVEMENTSYSTEM_H
 #define MOVEMENTSYSTEM_H
 
-#include "../ECS/ECS.h"
+#include "ECS/ECS.h"
 
 // Inherits from the parent class `System`
 class MovementSystem : public System {

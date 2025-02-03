@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.23)
 
+set(PROJECT_NAME GameEngine)
+set(PROJECT_VERSION 0.1.0)
+
+file( TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH )
+
+if ( EXISTS "${LOC_PATH}" )
+    message( FATAL_ERROR "You cannot build in the source directory. Please use a build subdirectory." )
+endif()
+
 #-------------------------------------------------------------------------------------
 # Set VCPKG
 #-------------------------------------------------------------------------------------
@@ -16,13 +25,10 @@ set(CMAKE_TOOLCHAIN_FILE ${VCPKG_TOOLCHAIN_ROOT})
 # Set project
 #-------------------------------------------------------------------------------------
 
-project(gameengine)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
-#${CMAKE_SOURCE_DIR}
-#${CMAKE_CURRENT_SOURCE_DIR}
-#${CMAKE_BINARY_DIR}
+
+project(${PROJECT_NAME})
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -39,6 +45,9 @@ set(LIBS_SOURCES)
 add_subdirectory(libs)
 
 add_executable(gameengine ${HEADERS} ${SOURCES} ${LIBS_SOURCES})
+target_include_directories(gameengine PUBLIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+)
 target_link_libraries(gameengine
         ${SDL2_LIBRARIES}
         ${SDL2_IMAGE_LIBRARIES}

@@ -1,6 +1,6 @@
 #include "ECS.h"
 
-#include "../Logger/Logger.h"
+#include "Logger/Logger.h"
 
 // Initializes static methods from header
 int IComponent::nextId = 0;
@@ -41,6 +41,11 @@ Entity Registry::CreateEntity() {
     // Insert new entity into the line
     entitiesToBeAdded.insert(entity);
 
+    // Make sure the entityComponentSignatures can accommodate the new entity
+    if (entityId >= entityComponentSignatures.size()) {
+        entityComponentSignatures.resize(entityId + 1);
+    }
+
     Logger::Log("Entity created with id = " + std::to_string(entityId));
     return entity;
 }
@@ -68,5 +73,15 @@ void Registry::AddEntityToSystems(Entity entity) {
 
 
 void Registry::Update() {
+    // Add entities from the creating waiting list to the active systems
+    for (auto entity: entitiesToBeAdded) {
+        AddEntityToSystems(entity);
+    }
+    entitiesToBeAdded.clear();
 
+    // TODO: Remove entities from the deleting waiting list from the active systems
+    // for (auto entity: entitiesToBeKilled) {
+    //     KillEntity(entity);
+    // }
+    // entitiesToBeKilled.clear();
 }

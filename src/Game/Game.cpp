@@ -1,7 +1,7 @@
 #include "Game.h"
 
-#include "../ECS/ECS.h"
-#include "../Logger/Logger.h"
+#include "ECS/ECS.h"
+#include "Logger/Logger.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -9,6 +9,7 @@
 
 Game::Game() {
     isRunning = false;
+    registry = new Registry();
     Logger::Log("Game constructor called.");
 }
 
@@ -74,11 +75,9 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
-    // TODO:
-    // Entity tank = registry.CreateEntity();
-    // tank.AddComponent<TransformComponent>();
-    // tank.AddComponent<BoxColliderComponent>();
-    // tank.AddComponent<SpriteComponent>("./assets/images/tank.png");
+    // Create entities
+    Entity tank = registry->CreateEntity();
+    Entity truck = registry->CreateEntity();
 }
 
 void Game::Update() {
