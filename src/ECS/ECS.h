@@ -6,6 +6,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include <Logger/Logger.h>
 
 constexpr unsigned int MAX_COMPONENTS = 32;
 
@@ -155,7 +156,7 @@ class Registry {
     // Vector of component pools.
     // Each pool contains all the data for a certain component type
     // [vector index = componentId], [pool index = entityId]
-    std::vector<IPool*> componentPools;
+    std::vector<std::shared_ptr<IPool>> componentPools;
 
     // Vector of component signatures.
     // The signature lets us know which components are turned "on" for an entity
@@ -163,10 +164,16 @@ class Registry {
     std::vector<Signature> entityComponentSignatures;
 
     // Map of active systems [ index = system typeid ]
-    std::unordered_map<std::type_index, System*> systems;
+    std::unordered_map<std::type_index, std::shared_ptr<System>> systems;
 
 public:
-    Registry() = default;
+    Registry() {
+        Logger::Log("Registry constructor called.");
+    }
+
+    ~Registry() {
+        Logger::Log("Registry destructor called.");
+    }
 
     void Update();
 
@@ -219,7 +226,7 @@ template <typename TSystem, typename... TArgs>
 void Registry::AddSystem(TArgs&&... args) {
     // Create new system
     // TODO: replace a raw pointer with a smart pointer
-    TSystem* newSystem(new TSystem(std::forward<TArgs>(args)...));
+    std::shared_ptr<TSystem> newSystem = std::make_shared<TSystem>(std::forward<TArgs>(args)...);
 
     // Add the system to an unordered map
     systems.insert(std::make_pair(std::type_index(typeid(TSystem)), newSystem)); // pair(key, value)
@@ -261,13 +268,12 @@ void Registry::AddComponent(Entity entity, TArgs&&... args) {
 
     // If nothing within the current position
     if (!componentPools[componentId]) {
-        // TODO: replace a raw pointer with a smart pointer
-        Pool<TComponent>* newComponentPool = new Pool<TComponent>();
+        auto newComponentPool = std::make_shared<Pool<TComponent>>();
         componentPools[componentId] = newComponentPool;  // assigns the current position
     }
 
     // Get the component pool
-    Pool<TComponent>* componentPool = componentPools[componentId];
+    auto componentPool = std::make_shared<Pool<TComponent>>(componentPools[componentId]);
 
     // Resize current component pool
     if (entityId >= componentPool->GetSize())
