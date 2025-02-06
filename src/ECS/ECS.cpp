@@ -1,6 +1,7 @@
 #include "ECS.h"
 
 #include "Logger/Logger.h"
+#include <algorithm>
 
 // Initializes static methods from header
 int IComponent::nextId = 0;
@@ -13,38 +14,35 @@ void System::AddEntityToSystem(Entity entity) {
     entities.push_back(entity);
 }
 
-void System::RemoveEntityToSystem(Entity entity) {
+void System::RemoveEntityFromSystem(Entity entity) {
     // Rely on Entity::operator==
     entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
 }
 
 // Returns a reference to the entities vector, not a copy of the vector
-[[nodiscard]] const std::vector<Entity>& System::GetSystemEntities() const {
+std::vector<Entity> System::GetSystemEntities() const {
     return entities;
 }
 
-[[nodiscard]] const Signature& System::GetComponentSignature() const {
+const Signature& System::GetComponentSignature() const {
     return componentSignature;
 }
 
 Entity Registry::CreateEntity() {
     unsigned int entityId = numEntities++;
 
-    // Increases the size of `entityComponentSignatures` if there is more to add
-    if (entityId >= entityComponentSignatures.size()) {
-        entityComponentSignatures.resize(entityId + 1);
-    }
-
     // Creates new entity
     Entity entity(entityId);
+
+    // Initialize registry
+    entity.registry = this;
 
     // Insert new entity into the line
     entitiesToBeAdded.insert(entity);
 
     // Make sure the entityComponentSignatures can accommodate the new entity
-    if (entityId >= entityComponentSignatures.size()) {
+    if (entityId >= entityComponentSignatures.size())
         entityComponentSignatures.resize(entityId + 1);
-    }
 
     Logger::Log("Entity created with id = " + std::to_string(entityId));
     return entity;
@@ -55,28 +53,26 @@ void Registry::AddEntityToSystems(Entity entity) {
     const auto entityId = entity.GetId();
 
     // Match `entityComponentSignature` <----> `systemComponentSignature`
-    const auto entityComponentSignature = entityComponentSignatures[entityId];
+    const auto& entityComponentSignature = entityComponentSignatures[entityId];
 
     // Search all the systems within an unordered map
-    for (auto& system: systems) {
+    for (auto& system : systems) {
         const auto& systemComponentSignature = system.second->GetComponentSignature();
 
         // Bitwise comparison between the entity and system signatures
-        bool isInterested = (entityComponentSignature & systemComponentSignature) == systemComponentSignature;
+        bool isInterested = (entityComponentSignature & systemComponentSignature)
+                            == systemComponentSignature;
 
         // Add entity to the system
-        if (isInterested) {
+        if (isInterested)
             system.second->AddEntityToSystem(entity);
-        }
     }
 }
 
-
 void Registry::Update() {
     // Add entities from the creating waiting list to the active systems
-    for (auto entity: entitiesToBeAdded) {
+    for (auto entity : entitiesToBeAdded)
         AddEntityToSystems(entity);
-    }
     entitiesToBeAdded.clear();
 
     // TODO: Remove entities from the deleting waiting list from the active systems

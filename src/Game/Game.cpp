@@ -1,5 +1,8 @@
 #include "Game.h"
 
+// TODO: Create one header file for components
+#include "Components/TransformComponent.h"
+#include "Components/RigidBodyComponent.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
 
@@ -75,9 +78,13 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
-    // Create entities
+    // Create an entity
     Entity tank = registry->CreateEntity();
-    Entity truck = registry->CreateEntity();
+    // Add components
+    tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
+    tank.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 0.0));
+    tank.RemoveComponent<RigidBodyComponent>();
+    tank.RemoveComponent<TransformComponent>();
 }
 
 void Game::Update() {
