@@ -14,7 +14,8 @@ const unsigned int MAX_COMPONENTS = 32;
 //------------------------------------------------------------------------
 // Signature
 //------------------------------------------------------------------------
-typedef std::bitset<MAX_COMPONENTS> Signature;
+// typedef std::bitset<MAX_COMPONENTS> Signature; // C style
+using Signature = std::bitset<MAX_COMPONENTS>; // Modern C++
 
 // Class template. A parent class for components
 struct IComponent {
@@ -252,11 +253,14 @@ void Registry::AddSystem(TArgs&&... args) {
 
 template <typename TSystem>
 void Registry::RemoveSystem() {
+    if (HasSystem<TSystem>()) {
+        systems.erase(std::type_index(typeid(TSystem)));
+    }
     // Get system id
-    auto system = systems.find(std::type_index(typeid(TSystem)));
+    // auto system = systems.find(std::type_index(typeid(TSystem)));
 
     // Remove the system from the unordered map
-    systems.erase(system);
+    // systems.erase(system);
 }
 
 template <typename TSystem>
@@ -344,7 +348,7 @@ TComponent& Registry::GetComponent(Entity entity) const {
     // Fetch the component object
     auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 
-    Logger::Log("Get a component id = " + std::to_string(componentId) + " from Entity id " + std::to_string(entityId));
+    // Logger::Log("Get a component id = " + std::to_string(componentId) + " from Entity id " + std::to_string(entityId));
 
     // Return the component by index
     return componentPool->Get(entityId);

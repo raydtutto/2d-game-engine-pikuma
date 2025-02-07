@@ -1,10 +1,13 @@
 #include "Game.h"
 
 // TODO: Create one header file for components
-#include "Components/TransformComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include "Components/TransformComponent.h"
+#include "Components/SpriteComponent.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
+#include "Systems/MovementSystem.h"
+#include "Systems/RenderSystem.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -78,13 +81,22 @@ void Game::ProcessInput() {
 }
 
 void Game::Setup() {
+    // Add the systems that need to be processed
+    registry->AddSystem<MovementSystem>();
+    registry->AddSystem<RenderSystem>();
+
     // Create an entity
     Entity tank = registry->CreateEntity();
-    // Add components
     tank.AddComponent<TransformComponent>(glm::vec2(10.0, 30.0), glm::vec2(1.0, 1.0), 0.0);
-    tank.AddComponent<RigidBodyComponent>(glm::vec2(50.0, 0.0));
-    tank.RemoveComponent<RigidBodyComponent>();
-    tank.RemoveComponent<TransformComponent>();
+    tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
+    tank.AddComponent<SpriteComponent>(10, 10);
+    // tank.RemoveComponent<RigidBodyComponent>();
+
+    // Create an entity
+    Entity truck = registry->CreateEntity();
+    truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
+    truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
+    truck.AddComponent<SpriteComponent>(10, 50);
 }
 
 void Game::Update() {
@@ -99,17 +111,19 @@ void Game::Update() {
     // Store the current frame time
     msPrevFrame = SDL_GetTicks();
 
-    // TODO:
-    // MovementSystem.Update();
-    // CollisionSystem.Update();
-    // DamageSystem.Update();
+    // Invoke all the systems that we need to update
+    registry->GetSystem<MovementSystem>().Update(deltaTime);
+
+    // Update the registry to process the entities that are waiting to be created/deleted
+    registry->Update();
 }
 
 void Game::Render() {
     SDL_SetRenderDrawColor(renderer, 40, 40, 40, 255);
     SDL_RenderClear(renderer);
 
-    // TODO: Render game objects
+    // Invoke all the systems that we need to update
+    registry->GetSystem<RenderSystem>().Update(renderer);
 
     SDL_RenderPresent(renderer);
 }
