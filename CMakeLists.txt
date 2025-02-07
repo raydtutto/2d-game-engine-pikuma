@@ -54,3 +54,6 @@ target_link_libraries(gameengine
         ${LUA_LIBRARIES}
         spdlog::spdlog_header_only
 )
+
+# Add assets folder
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
