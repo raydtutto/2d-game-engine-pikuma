@@ -1,7 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
-#include <SDL.h>
+#include "AssetStore/AssetStore.h"
 #include "ECS/ECS.h"
+
+#include <SDL.h>
 
 constexpr int FPS = 60;
 constexpr int MS_PER_FRAME = 1000 / FPS;
@@ -14,6 +16,7 @@ private:
     SDL_Renderer* renderer;
 
     std::unique_ptr<Registry> registry;
+    std::unique_ptr<AssetStore> assetStore;
 
 public:
     // API - Application programming interface - START ---------------------------------------

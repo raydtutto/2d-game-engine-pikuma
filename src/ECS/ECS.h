@@ -239,7 +239,7 @@ template <typename TComponent>
 void System::RequireComponent() {
     const auto componentId = Component<TComponent>::GetId();
     componentSignature.set(componentId);
-};
+}
 
 template <typename TSystem, typename... TArgs>
 void Registry::AddSystem(TArgs&&... args) {
