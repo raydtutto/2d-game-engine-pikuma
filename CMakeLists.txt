@@ -35,6 +35,11 @@ find_package(SDL2_image REQUIRED)
 find_package(Lua REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
+# Add include-what-you-use in Debug mode
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    find_program(iwyu_path NAMES include-what-you-use iwyu REQUIRED)
+endif()
+
 include_directories(libs)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${LUA_INCLUDE_DIR})
 
@@ -54,6 +59,11 @@ target_link_libraries(gameengine
         ${LUA_LIBRARIES}
         spdlog::spdlog_header_only
 )
+
+# Check if debug mode and variable iwyu_path exists
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND iwyu_path)
+    set_property(TARGET gameengine PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+endif()
 
 # Add assets folder
 file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
