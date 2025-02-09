@@ -132,7 +132,7 @@ void Game::Render() {
     SDL_RenderClear(renderer);
 
     // Invoke all the systems that we need to update
-    registry->GetSystem<RenderSystem>().Update(renderer);
+    registry->GetSystem<RenderSystem>().Update(renderer, assetStore);
 
     SDL_RenderPresent(renderer);
 }

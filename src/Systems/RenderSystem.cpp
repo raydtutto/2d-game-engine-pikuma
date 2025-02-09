@@ -30,7 +30,22 @@ void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetSto
         // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         // SDL_RenderFillRect(renderer, &objRect);
 
+        // Set the source rectangle of our original sprite texture
+        SDL_Rect srcRect = sprite.srcRect;
+
+        // Set the destination rectangle with x, y position to be rendered
+        SDL_Rect dstRect = { static_cast<int>(transform.position.x),
+                             static_cast<int>(transform.position.y),
+                             static_cast<int>(sprite.width * transform.scale.x),
+                             static_cast<int>(sprite.height * transform.scale.y) };
+
         // Draw the png texture
-        // SDL_RenderCopy(renderer, );
+        SDL_RenderCopyEx(renderer,
+                         assetStore->GetTexture(sprite.assetId),
+                         &srcRect,
+                         &dstRect,
+                         transform.rotation,
+                         NULL,
+                         SDL_FLIP_NONE);
     }
 }
