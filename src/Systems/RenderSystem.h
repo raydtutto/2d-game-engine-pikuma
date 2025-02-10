@@ -2,6 +2,7 @@
 #define RENDERSYSTEM_H
 
 #include "ECS/ECS.h"
+#include <memory>
 
 // Forward declaration
 struct SDL_Renderer;

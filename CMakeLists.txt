@@ -26,7 +26,7 @@ set(CMAKE_TOOLCHAIN_FILE ${VCPKG_TOOLCHAIN_ROOT})
 #-------------------------------------------------------------------------------------
 
 # Add assets folder
-file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")

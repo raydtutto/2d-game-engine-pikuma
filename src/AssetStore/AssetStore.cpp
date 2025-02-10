@@ -23,7 +23,7 @@ void AssetStore::ClearAssets() {
     // Clear the map
     textures.clear();
 
-    Logger::Log("Textures map was cleared");
+    Logger::Log("Textures map was cleared.");
 }
 
 void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath) {
@@ -43,6 +43,10 @@ void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId, 
 }
 
 SDL_Texture* AssetStore::GetTexture(const std::string& assetId) {
+    if (!textures.at(assetId)) {
+        Logger::Error("Can't find an assetid = " + assetId + "!");
+        return nullptr;
+    }
     return textures.at(assetId);
 }
 

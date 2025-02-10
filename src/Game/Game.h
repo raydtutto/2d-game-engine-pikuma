@@ -1,9 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
-#include "AssetStore/AssetStore.h"
-#include "ECS/ECS.h"
 
 #include <SDL.h>
+#include <memory>
+
+// Forward declaration
+class AssetStore;
+class Registry;
 
 constexpr int FPS = 60;
 constexpr int MS_PER_FRAME = 1000 / FPS;

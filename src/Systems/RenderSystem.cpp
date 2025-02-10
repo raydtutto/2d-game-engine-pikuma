@@ -5,7 +5,8 @@
 #include "Components/TransformComponent.h"
 
 #include <SDL.h>
-#include <SDL_image.h>
+#include <vector>
+#include <glm/glm.hpp>
 
 RenderSystem::RenderSystem() {
     RequireComponent<SpriteComponent>();
@@ -19,17 +20,6 @@ void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetSto
         const auto transform = entity.GetComponent<TransformComponent>();
         const auto sprite = entity.GetComponent<SpriteComponent>();
 
-        // // Create a rectangle
-        // SDL_Rect objRect = {
-        //     static_cast<int>(transform.position.x),
-        //     static_cast<int>(transform.position.y),
-        //     sprite.width,
-        //     sprite.height
-        // };
-        // // Set color and draw a rectangle
-        // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        // SDL_RenderFillRect(renderer, &objRect);
-
         // Set the source rectangle of our original sprite texture
         SDL_Rect srcRect = sprite.srcRect;
 
@@ -40,12 +30,7 @@ void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetSto
                              static_cast<int>(sprite.height * transform.scale.y) };
 
         // Draw the png texture in the renderer window
-        SDL_RenderCopyEx(renderer,
-                         assetStore->GetTexture(sprite.assetId),
-                         &srcRect,
-                         &dstRect,
-                         transform.rotation,
-                         NULL,
-                         SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, assetStore->GetTexture(sprite.assetId), &srcRect, &dstRect,
+                         transform.rotation, NULL, SDL_FLIP_NONE);
     }
 }

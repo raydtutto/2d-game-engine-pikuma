@@ -5,8 +5,10 @@
 #include <bitset>
 #include <memory>
 #include <set>
+#include <string>
 #include <typeindex>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 const unsigned int MAX_COMPONENTS = 32;
@@ -15,7 +17,7 @@ const unsigned int MAX_COMPONENTS = 32;
 // Signature
 //------------------------------------------------------------------------
 // typedef std::bitset<MAX_COMPONENTS> Signature; // C style
-using Signature = std::bitset<MAX_COMPONENTS>; // Modern C++
+using Signature = std::bitset<MAX_COMPONENTS>;  // Modern C++
 
 // Class template. A parent class for components
 struct IComponent {
@@ -69,8 +71,8 @@ public:
     }
 
     // Template functions for components management
-    template <typename TComponent, typename ...TArgs>
-    void AddComponent(TArgs&& ...args);
+    template <typename TComponent, typename... TArgs>
+    void AddComponent(TArgs&&... args);
 
     template <typename TComponent>
     void RemoveComponent();
@@ -82,7 +84,7 @@ public:
     TComponent& GetComponent() const;
 
     // Hold a pointer to the entity's owner registry
-    class Registry* registry; // forward declaration of `Registry` class
+    class Registry* registry;  // forward declaration of `Registry` class
 };
 
 //------------------------------------------------------------------------
@@ -253,9 +255,8 @@ void Registry::AddSystem(TArgs&&... args) {
 
 template <typename TSystem>
 void Registry::RemoveSystem() {
-    if (HasSystem<TSystem>()) {
+    if (HasSystem<TSystem>())
         systems.erase(std::type_index(typeid(TSystem)));
-    }
     // Get system id
     // auto system = systems.find(std::type_index(typeid(TSystem)));
 
@@ -295,7 +296,8 @@ void Registry::AddComponent(Entity entity, TArgs&&... args) {
     }
 
     // Get the component pool
-    std::shared_ptr<Pool<TComponent>> componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
+    std::shared_ptr<Pool<TComponent>> componentPool = std::static_pointer_cast<Pool<TComponent>>(
+        componentPools[componentId]);
 
     // Resize current component pool
     if (entityId >= componentPool->GetSize())
@@ -333,7 +335,8 @@ bool Registry::HasComponent(Entity entity) const {
     const auto componentId = Component<TComponent>::GetId();
     const auto entityId = entity.GetId();
 
-    Logger::Log("Entity id " + std::to_string(entityId) + " has a component id = " + std::to_string(componentId));
+    Logger::Log("Entity id " + std::to_string(entityId)
+                + " has a component id = " + std::to_string(componentId));
 
     // Return the component state
     return entityComponentSignatures[entityId].test(componentId);
@@ -348,7 +351,8 @@ TComponent& Registry::GetComponent(Entity entity) const {
     // Fetch the component object
     auto componentPool = std::static_pointer_cast<Pool<TComponent>>(componentPools[componentId]);
 
-    // Logger::Log("Get a component id = " + std::to_string(componentId) + " from Entity id " + std::to_string(entityId));
+    // Logger::Log("Get a component id = " + std::to_string(componentId) + " from Entity id " +
+    // std::to_string(entityId));
 
     // Return the component by index
     return componentPool->Get(entityId);
@@ -360,8 +364,6 @@ template <typename TComponent, typename... TArgs>
 void Entity::AddComponent(TArgs&&... args) {
     // Ask registry to add a component
     registry->AddComponent<TComponent>(*this, std::forward<TArgs>(args)...);
-
-
 }
 
 template <typename TComponent>

@@ -4,6 +4,9 @@
 #include "Components/RigidBodyComponent.h"
 #include "Components/TransformComponent.h"
 #include "ECS/ECS.h"
+#include "glm/glm.hpp"
+
+#include <vector>
 
 // Inherits from the parent class `System`
 class MovementSystem : public System {

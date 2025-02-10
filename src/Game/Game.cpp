@@ -2,16 +2,19 @@
 
 // TODO: Create one header file for components
 #include "Components/RigidBodyComponent.h"
-#include "Components/TransformComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/TransformComponent.h"
+
+// TODO: Create one header file for systems
+#include "AssetStore/AssetStore.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
 #include "Systems/MovementSystem.h"
 #include "Systems/RenderSystem.h"
-#include "AssetStore/AssetStore.h"
 
 #include <SDL.h>
 #include <glm/glm.hpp>
+#include <string>
 
 Game::Game() {
     isRunning = false;
@@ -91,7 +94,7 @@ void Game::Setup() {
 
     // Adding assets to the asset store
     assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
-    // assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
+    assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
 
     // Create an entity
     Entity tank = registry->CreateEntity();
@@ -101,10 +104,10 @@ void Game::Setup() {
     // tank.RemoveComponent<RigidBodyComponent>();
 
     // Create an entity
-    // Entity truck = registry->CreateEntity();
-    // truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
-    // truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
-    // truck.AddComponent<SpriteComponent>("truck-image", 10, 50);
+    Entity truck = registry->CreateEntity();
+    truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
+    truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
+    truck.AddComponent<SpriteComponent>("truck-image", 32, 32);
 }
 
 void Game::Update() {
