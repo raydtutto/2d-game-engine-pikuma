@@ -25,6 +25,9 @@ set(CMAKE_TOOLCHAIN_FILE ${VCPKG_TOOLCHAIN_ROOT})
 # Set project
 #-------------------------------------------------------------------------------------
 
+# Add assets folder
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -64,6 +67,3 @@ target_link_libraries(gameengine
 if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND iwyu_path)
     set_property(TARGET gameengine PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
 endif()
-
-# Add assets folder
-file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)

@@ -30,6 +30,10 @@ void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId, 
     // Create a texture from a surface
     SDL_Surface* surface = IMG_Load(filePath.c_str());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!surface || ! texture) {
+        Logger::Error("Failed to load image: " + filePath);
+        return;
+    }
     SDL_FreeSurface(surface);
 
     // Add the texture to the map
@@ -39,6 +43,6 @@ void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId, 
 }
 
 SDL_Texture* AssetStore::GetTexture(const std::string& assetId) {
-    return textures[assetId];
+    return textures.at(assetId);
 }
 

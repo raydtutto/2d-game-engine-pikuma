@@ -39,7 +39,7 @@ void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetSto
                              static_cast<int>(sprite.width * transform.scale.x),
                              static_cast<int>(sprite.height * transform.scale.y) };
 
-        // Draw the png texture
+        // Draw the png texture in the renderer window
         SDL_RenderCopyEx(renderer,
                          assetStore->GetTexture(sprite.assetId),
                          &srcRect,
