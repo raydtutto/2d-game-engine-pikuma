@@ -122,7 +122,7 @@ class Pool : public IPool {
     std::vector<T> data;
 
 public:
-    Pool(int size = 100) {
+    Pool(int size = 50) {
         data.resize(size);
     }
 

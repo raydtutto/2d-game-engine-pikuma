@@ -3,10 +3,12 @@
 // TODO: Create one header file for components
 #include "Components/RigidBodyComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/TilemapComponent.h"
 #include "Components/TransformComponent.h"
 
 // TODO: Create one header file for systems
 #include "AssetStore/AssetStore.h"
+#include "Components/TilemapComponent.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
 #include "Systems/MovementSystem.h"
@@ -96,37 +98,37 @@ void Game::LoadLevel(int level) {
     // Adding assets to the asset store
     assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
     assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
-    assetStore->AddTexture(renderer, "tilemap-image", "assets/tilemaps/jungle.png");
+    assetStore->AddTmxFile(renderer, "map-jungle", "assets/tilemaps/map-jungle.tmx");
 
-    // Load the tilemap
-    int tileSize = 32;
-    double tileScale = 2.0;
-    int mapNumCols = 25;
-    int mapNumRows = 20;
-    std::fstream mapFile;
-    mapFile.open("assets/tilemaps/jungle.map");
-
-    // Validate file
-    if (!mapFile.is_open()) {
-        Logger::Error("Error opening the tilemap file.");
-        return;
-    }
-
-    for (int y = 0; y < mapNumRows; y++) {
-        for (int x = 0; x < mapNumCols; x++) {
-            char ch;
-            mapFile.get(ch);
-            int srcRectY = std::atoi(&ch) * tileSize;
-            mapFile.get(ch);
-            int srcRectX = std::atoi(&ch) * tileSize;
-            mapFile.ignore();
-
-            Entity tile  = registry->CreateEntity();
-            tile.AddComponent<TransformComponent>(glm::vec2(x * (tileScale * tileSize), y * (tileScale * tileSize)), glm::vec2(tileScale, tileScale), 0.0);
-            tile.AddComponent<SpriteComponent>("tilemap-image", tileSize, tileSize, srcRectX, srcRectY);
-        }
-    }
-    mapFile.close();
+    // // Load the tilemap
+    // int tileSize = 32;
+    // double tileScale = 2.0;
+    // int mapNumCols = 25;
+    // int mapNumRows = 20;
+    // std::fstream mapFile;
+    // mapFile.open("assets/tilemaps/jungle.map");
+    //
+    // // Validate file
+    // if (!mapFile.is_open()) {
+    //     Logger::Error("Error opening the tilemap file.");
+    //     return;
+    // }
+    //
+    // for (int y = 0; y < mapNumRows; y++) {
+    //     for (int x = 0; x < mapNumCols; x++) {
+    //         char ch;
+    //         mapFile.get(ch);
+    //         int srcRectY = std::atoi(&ch) * tileSize;
+    //         mapFile.get(ch);
+    //         int srcRectX = std::atoi(&ch) * tileSize;
+    //         mapFile.ignore();
+    //
+    //         Entity tile  = registry->CreateEntity();
+    //         tile.AddComponent<TransformComponent>(glm::vec2(x * (tileScale * tileSize), y * (tileScale * tileSize)), glm::vec2(tileScale, tileScale), 0.0);
+    //         tile.AddComponent<SpriteComponent>("tilemap-image", tileSize, tileSize, srcRectX, srcRectY);
+    //     }
+    // }
+    // mapFile.close();
 
     // Create an entity
     Entity tank = registry->CreateEntity();
@@ -140,6 +142,11 @@ void Game::LoadLevel(int level) {
     truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
     truck.AddComponent<SpriteComponent>("truck-image", 32, 32);
+
+    Entity tmxTemp = registry->CreateEntity();
+    // tmxTemp.AddComponent<TilemapComponent>("assets/tilemaps/map-jungle.tmx");
+    // tmxTemp.AddComponent<TransformComponent>(glm::vec2(200.0, 200.0), glm::vec2(1.0, 1.0), 0.0);
+    // tmxTemp.AddComponent<TilemapComponent>("map-jungle");
 }
 
 void Game::Setup() {
