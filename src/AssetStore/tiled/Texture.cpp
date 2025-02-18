@@ -1,8 +1,8 @@
 #include "Texture.h"
 #include <SDL.h>
-#define STB_IMAGE_IMPLEMENTATION
 #include "Logger/Logger.h"
-#include "stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 
 #include <iostream>
 
@@ -56,7 +56,7 @@ bool Texture::loadFromFile(const std::string& path, SDL_Renderer* renderer) {
         }
 
         //sets alpha blending
-        //SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
+        // SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
         m_size.x = x;
         m_size.y = y;
 

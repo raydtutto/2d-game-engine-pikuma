@@ -4,8 +4,7 @@
 #include <SDL.h>
 #include <map>
 #include <string>
-#include <tmxlite/Layer.hpp>  // for managing layers
-#include <tmxlite/Map.hpp>    // for loading tmx
+#include <tmxlite/Map.hpp>
 
 class AssetStore {
     // The list of textures
@@ -24,6 +23,7 @@ public:
     void AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
     void AddTmxFile(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
     std::vector<SDL_Texture*> GetTmxLayers(const std::string& assetId);
+    std::shared_ptr<tmx::Map> GetTmxMap(const std::string& assetId);
     SDL_Texture* GetTexture(const std::string& assetId);
 
 };

@@ -45,12 +45,12 @@ include_directories(libs)
 include_directories(libs/tmxlite/include)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${LUA_INCLUDE_DIR})
 
-# Searches recursively through all subdirectories
-file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "src/*.h")
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 set(LIBS_SOURCES)
 add_subdirectory(libs)
 add_subdirectory(libs/tmxlite)
+# Searches recursively through all subdirectories
+file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "src/*.h")
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
 add_executable(gameengine ${HEADERS} ${SOURCES} ${LIBS_SOURCES})
 target_include_directories(gameengine PUBLIC

@@ -1,10 +1,11 @@
 #include "AssetStore.h"
 
 #include "Logger/Logger.h"
-#include "tiled/Texture.h"
 #include "tiled/MapLayer.h"
+#include "tiled/Texture.h"
 
 #include <SDL_image.h>
+#include <tmxlite/Layer.hpp>
 #include <tmxlite/TileLayer.hpp>
 
 AssetStore::AssetStore() {
@@ -83,8 +84,9 @@ void AssetStore::AddTmxFile(SDL_Renderer* renderer, const std::string& assetId,
         for (auto i = 0u; i < mapLayers.size(); ++i) {
             if (mapLayers[i]->getType() == tmx::Layer::Type::Tile) {
                 renderLayers.emplace_back(std::make_unique<tiled::MapLayer>());
-                if (renderLayers.back()->create(map, i, textures))
+                if (renderLayers.back()->create(map, i, textures)) {
                     tileLayers[assetId].push_back(renderLayers.back()->generateTexture(renderer));
+                }
             }
         }
     }
@@ -94,6 +96,12 @@ std::vector<SDL_Texture*> AssetStore::GetTmxLayers(const std::string& assetId) {
     if (tileLayers.count(assetId) == 0U)
         return {};
     return tileLayers[assetId];
+}
+
+std::shared_ptr<tmx::Map> AssetStore::GetTmxMap(const std::string& assetId) {
+    if (tileMaps.count(assetId) == 0U)
+        return {};
+    return tileMaps[assetId];
 }
 
 SDL_Texture* AssetStore::GetTexture(const std::string& assetId) {

@@ -3,12 +3,10 @@
 // TODO: Create one header file for components
 #include "Components/RigidBodyComponent.h"
 #include "Components/SpriteComponent.h"
-#include "Components/TilemapComponent.h"
 #include "Components/TransformComponent.h"
 
 // TODO: Create one header file for systems
 #include "AssetStore/AssetStore.h"
-#include "Components/TilemapComponent.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
 #include "Systems/MovementSystem.h"
@@ -98,7 +96,7 @@ void Game::LoadLevel(int level) {
     // Adding assets to the asset store
     assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
     assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
-    assetStore->AddTmxFile(renderer, "map-jungle", "assets/tilemaps/map-jungle.tmx");
+    assetStore->AddTmxFile(renderer, "demo", "assets/tilemaps/demo.tmx");
 
     // // Load the tilemap
     // int tileSize = 32;
@@ -130,6 +128,10 @@ void Game::LoadLevel(int level) {
     // }
     // mapFile.close();
 
+    Entity tmxTemp = registry->CreateEntity();
+    tmxTemp.AddComponent<TransformComponent>(glm::vec2(50, 50), glm::vec2(0.8f, 0.8f));
+    tmxTemp.AddComponent<SpriteComponent>("demo", 0, 0, 0, 0, SpriteType::TILED);
+
     // Create an entity
     Entity tank = registry->CreateEntity();
     tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
@@ -142,11 +144,6 @@ void Game::LoadLevel(int level) {
     truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
     truck.AddComponent<SpriteComponent>("truck-image", 32, 32);
-
-    Entity tmxTemp = registry->CreateEntity();
-    // tmxTemp.AddComponent<TilemapComponent>("assets/tilemaps/map-jungle.tmx");
-    // tmxTemp.AddComponent<TransformComponent>(glm::vec2(200.0, 200.0), glm::vec2(1.0, 1.0), 0.0);
-    // tmxTemp.AddComponent<TilemapComponent>("map-jungle");
 }
 
 void Game::Setup() {
