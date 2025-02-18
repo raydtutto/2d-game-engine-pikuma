@@ -8,6 +8,7 @@ file(GLOB_RECURSE MODULE_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/glm/*.[hc]pp
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui/*.[hc]pp
         ${CMAKE_CURRENT_SOURCE_DIR}/sol/*.[hc]pp
+        ${CMAKE_CURRENT_SOURCE_DIR}/stb/*.[hc]
 )
 
 set(LIBS_SOURCES ${LIBS_SOURCES} ${MODULE_SOURCE} PARENT_SCOPE)
