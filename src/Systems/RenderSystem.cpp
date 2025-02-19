@@ -68,8 +68,14 @@ void RenderSystem::UpdateTiles(SDL_Renderer* renderer, const std::unique_ptr<Ass
                          static_cast<int>(width * transform.scale.x),
                          static_cast<int>(height * transform.scale.y) };
 
-    for (auto item : assetStore->GetTmxLayers(sprite.assetId)) {
-        if (item) {
+    const auto layers = assetStore->GetTmxLayers(sprite.assetId);
+
+    for (size_t i = 0U; i < layers.size(); i++) {
+        bool isLayerValid = sprite.tileLayerIndexes.empty()
+            || std::find(sprite.tileLayerIndexes.begin(), sprite.tileLayerIndexes.end(), i) != sprite.tileLayerIndexes.end();
+        if (!isLayerValid)
+            continue;
+        if (const auto item = layers[i]) {
             SDL_RenderCopyEx(renderer, item, &srcRect, &dstRect,
                              transform.rotation, NULL, SDL_FLIP_NONE);
         }

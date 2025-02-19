@@ -19,13 +19,14 @@ public:
     AssetStore();
     ~AssetStore();
 
-    void ClearAssets();
     void AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
     void AddTmxFile(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
     std::vector<SDL_Texture*> GetTmxLayers(const std::string& assetId);
     std::shared_ptr<tmx::Map> GetTmxMap(const std::string& assetId);
     SDL_Texture* GetTexture(const std::string& assetId);
 
+private:
+    void ClearAssets();
 };
 
 

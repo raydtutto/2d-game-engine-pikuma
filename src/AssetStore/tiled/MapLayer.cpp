@@ -10,7 +10,72 @@ using namespace tiled;
 MapLayer::MapLayer() {
 }
 
-bool MapLayer::create(const std::shared_ptr<tmx::Map>& map, std::uint32_t layerIndex,
+#ifdef DEBUG // todo move this to utils
+
+#include <SDL_image.h> // for use SaveTextureAsJPG
+bool SaveTextureAsJPG(SDL_Renderer* renderer, SDL_Texture* texture, const std::string& filename);
+bool SaveTextureAsJPG(SDL_Renderer* renderer, SDL_Texture* texture, const std::vector<SDL_Vertex>& vert) {
+    // Create a blank texture with the required size
+    SDL_Texture* finalTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+                                                  SDL_TEXTUREACCESS_TARGET, 500, 600);
+    if (!finalTexture) {
+        Logger::Error("Failed to create texture.");
+        return false;
+    }
+
+    // Set blend mode to allow transparency
+    SDL_SetTextureBlendMode(finalTexture, SDL_BLENDMODE_BLEND);
+
+    // Set render target to the final texture
+    SDL_SetRenderTarget(renderer, finalTexture);
+
+    // Clear the texture (optional, ensures a transparent background)
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderGeometry(renderer, texture, vert.data(), static_cast<std::int32_t>(vert.size()), nullptr, 1);
+
+    // Reset render target to default (screen)
+    SDL_SetRenderTarget(renderer, nullptr);
+
+    SaveTextureAsJPG(renderer, finalTexture, "vert.jpg");
+    return true;
+}
+
+bool SaveTextureAsJPG(SDL_Renderer* renderer, SDL_Texture* texture, const std::string& filename) {
+    int width, height;
+    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
+
+    // Create an SDL surface to store the texture's pixel data
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
+    if (!surface) {
+        std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    // Copy texture to the surface
+    SDL_SetRenderTarget(renderer, texture);
+    if (SDL_RenderReadPixels(renderer, nullptr, surface->format->format, surface->pixels, surface->pitch) != 0) {
+        std::cerr << "Failed to read pixels: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return false;
+    }
+    SDL_SetRenderTarget(renderer, nullptr); // Reset target
+
+    // Save surface as a JPG file (requires SDL_image)
+    if (IMG_SaveJPG(surface, filename.c_str(), 100) != 0) {
+        std::cerr << "Failed to save JPG: " << IMG_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return false;
+    }
+
+    SDL_FreeSurface(surface);
+    return true;
+}
+
+#endif
+
+bool MapLayer::create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& map, std::uint32_t layerIndex,
                       const std::vector<std::unique_ptr<Texture>>& textures) {
     const auto& layers = map->getLayers();
     if (layers[layerIndex]->getType() != tmx::Layer::Type::Tile) {
@@ -49,7 +114,7 @@ bool MapLayer::create(const std::shared_ptr<tmx::Map>& map, std::uint32_t layerI
                     // tex coords
                     auto idIndex = (tileIDs[idx].ID - ts.getFirstGID());
                     float u = static_cast<float>(idIndex % tileCountX);
-                    float v = static_cast<float>(idIndex / tileCountY);
+                    float v = static_cast<float>(idIndex / tileCountX);
                     u *= mapTileSize.x;  // TODO we should be using the tile set size, as this may
                                          // be different from the map's grid size
                     v *= mapTileSize.y;
@@ -77,6 +142,7 @@ bool MapLayer::create(const std::shared_ptr<tmx::Map>& map, std::uint32_t layerI
                     vert = { { tilePosX + mapTileSize.x, tilePosY + mapTileSize.y },
                              vertColour,
                              { u + uNorm, v + vNorm } };
+
                     verts.emplace_back(vert);
                 }
             }
@@ -89,7 +155,7 @@ bool MapLayer::create(const std::shared_ptr<tmx::Map>& map, std::uint32_t layerI
         }
     }
 
-    return !m_subsets.empty();
+    return true;
 }
 
 SDL_Texture* MapLayer::generateTexture(SDL_Renderer* renderer) {

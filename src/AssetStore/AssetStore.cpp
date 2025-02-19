@@ -19,15 +19,24 @@ AssetStore::~AssetStore() {
 
 void AssetStore::ClearAssets() {
     // Loop through all textures
-    for (auto texture : textures) {
+    for (auto& pair : textures) {
         // Deallocate textures in memory
-        SDL_DestroyTexture(texture.second);  // texture.second - delete the value of "texture"
+        SDL_DestroyTexture(pair.second);  // pair.second - delete the value of "texture"
+    }
+
+    // Loop through Tiled layers
+    for (auto& [_, val] : tileLayers) { // range-based loop, xx17
+        for (SDL_Texture* texture : val) {
+            SDL_DestroyTexture(texture);
+        }
     }
 
     // Clear the map
     textures.clear();
+    tileMaps.clear();
+    tileLayers.clear();
 
-    Logger::Log("Textures map was cleared.");
+    Logger::Log("Textures and tiled objects have been cleared.");
 }
 
 void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId,
@@ -84,7 +93,7 @@ void AssetStore::AddTmxFile(SDL_Renderer* renderer, const std::string& assetId,
         for (auto i = 0u; i < mapLayers.size(); ++i) {
             if (mapLayers[i]->getType() == tmx::Layer::Type::Tile) {
                 renderLayers.emplace_back(std::make_unique<tiled::MapLayer>());
-                if (renderLayers.back()->create(map, i, textures)) {
+                if (renderLayers.back()->create(renderer, map, i, textures)) {
                     tileLayers[assetId].push_back(renderLayers.back()->generateTexture(renderer));
                 }
             }
