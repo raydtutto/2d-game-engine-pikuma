@@ -16,26 +16,35 @@ RenderSystem::RenderSystem() {
 }
 
 void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetStore>& assetStore) {
-    auto entities = GetSystemEntities();
-
-    // Sort entities by zIndex before rendering
-    std::sort(entities.begin(), entities.end(), [](const Entity& a, const Entity& b) {
-        return a.GetComponent<SpriteComponent>().zIndex < b.GetComponent<SpriteComponent>().zIndex;
-    });
+    SortEntitiesIntoBuckets();
 
     // Loop all sorted entities that the system is interested in
-    for (auto entity : entities) {
-        const auto transform = entity.GetComponent<TransformComponent>();
-        const auto sprite = entity.GetComponent<SpriteComponent>();
+    for (auto & renderBucket : renderBuckets) {
+        for (auto entity : renderBucket) {
+            const auto transform = entity.GetComponent<TransformComponent>();
 
-        switch (sprite.spriteType) {
-            case SpriteType::SPRITE:
-                UpdateSprites(renderer, assetStore, transform, sprite);
+            switch (const auto& sprite = entity.GetComponent<SpriteComponent>(); sprite.spriteType) {
+                case SpriteType::SPRITE:
+                    UpdateSprites(renderer, assetStore, transform, sprite);
                 break;
-            case SpriteType::TILED:
-                UpdateTiles(renderer, assetStore, transform, sprite);
+                case SpriteType::TILED:
+                    UpdateTiles(renderer, assetStore, transform, sprite);
                 break;
+            }
         }
+    }
+}
+
+void RenderSystem::SortEntitiesIntoBuckets() {
+    // Clear buckets from the previous frame
+    for (auto & renderBucket : renderBuckets) {
+        renderBucket.clear();
+    }
+
+    // Assign each entity to its bucket
+    for (auto entity : GetSystemEntities()) {
+        auto& sprite = entity.GetComponent<SpriteComponent>();
+        renderBuckets[sprite.layer].push_back(entity);
     }
 }
 

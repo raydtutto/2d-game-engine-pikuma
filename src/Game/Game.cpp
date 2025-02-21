@@ -98,23 +98,23 @@ void Game::LoadLevel(int level) {
 
     Entity tmxTemp = registry->CreateEntity();
     tmxTemp.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.8f, 0.8f));
-    tmxTemp.AddComponent<SpriteComponent>("jungle", 0, 0, 0, 0, 0, SpriteType::TILED);
+    tmxTemp.AddComponent<SpriteComponent>("jungle", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
     tmxTemp.GetComponent<SpriteComponent>().tileLayerIndexes = {0};
 
     // Create entities
     Entity tank = registry->CreateEntity();
     tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
     tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
-    tank.AddComponent<SpriteComponent>("tank-image", 32, 32, 4);
+    tank.AddComponent<SpriteComponent>("tank-image", 32, 32, LAYER_PLAYER);
 
     Entity truck = registry->CreateEntity();
     truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
-    truck.AddComponent<SpriteComponent>("truck-image", 32, 32, 3);
+    truck.AddComponent<SpriteComponent>("truck-image", 32, 32, LAYER_ENEMIES);
 
     Entity skyTemp = registry->CreateEntity();
     skyTemp.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.8f, 0.8f));
-    skyTemp.AddComponent<SpriteComponent>("jungle", 0, 0, 0, 0, 0, SpriteType::TILED);
+    skyTemp.AddComponent<SpriteComponent>("jungle", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
     skyTemp.GetComponent<SpriteComponent>().tileLayerIndexes = {1, 2, 3};
 }
 
