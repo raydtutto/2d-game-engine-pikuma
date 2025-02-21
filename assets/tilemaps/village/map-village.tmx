@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="1">
+ <tileset firstgid="1" source="tileset_floor.tsx"/>
+ <tileset firstgid="661" source="tileset_village_abandoned.tsx"/>
+ <layer id="1" name="ground" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzjZGRg4CSAg4FYhAJMyHx0O8RpZIcpEJvjMUOMCDt4qGAPOhYl0R+UxgspdqD7RZRCO3CFH6EwCyPSDm8CdhMbN+J47KBGWiM3Psi1hxizuAnYY4uEsdlJiT+IsdMWixouCszHl1ZojTcxIPBmBtq45wQDAj9CsgcbJjcc7wHNPAvEF6H2nMRjByX4LtQeYvxCLt4INPMxWphtYsAeV+Ti4wyo8QLDu5HYpIYhcr4FAAdqO8w=
+  </data>
+ </layer>
+ <layer id="4" name="stones" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFZAFmBgZGZtpaIQI0X5TGdsDAeyb62DNQ4Dod/Pd6mIfhKBg4cHs0bY0CIgAA/pwDyw==
+  </data>
+ </layer>
+ <layer id="3" name="vagetation" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgF1ACWzAPtgsEJ/jINtAtGBuAFpj8+IOYHYgEi0qI1GelVEahHCYiVgVgFj35BoJwQmfnBFKjPDIjNgdgCjxmqQDk1ZsrsIhbA7BqpAJSH/0ExrfIzsrnUssNqBMYZADSXCmk=
+  </data>
+ </layer>
+ <layer id="2" name="environment" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4D+4CfTQLtgFFADXKFDPL4YTStDDiwAxtlCIF5Ew7jbAjR7KxBvo6EdJ4BmnwTiU0MkDQIAzY8JKw==
+  </data>
+ </layer>
+ <layer id="8" name="vase" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUUBPUMw+0C0bBKBgFIxEAAE7jAIM=
+  </data>
+ </layer>
+ <layer id="7" name="house" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQxHcYWJguAvE95hoZ8cHoNkfgfgTDe1gYWZgYAViNmba2TEKRsEoGAUjAQAAnRcFjw==
+  </data>
+ </layer>
+ <layer id="6" name="statue" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMApwAyZmBgZmZtraIQY0X5zGdgx3AABaCAA/
+  </data>
+ </layer>
+</map>

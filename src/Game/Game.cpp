@@ -94,12 +94,17 @@ void Game::LoadLevel(int level) {
     // Adding assets to the asset store
     assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
     assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
-    assetStore->AddTmxFile(renderer, "jungle", "assets/tilemaps/map-jungle.tmx");
+    assetStore->AddTmxFile(renderer, "village", "assets/tilemaps/village/map-village.tmx");
 
-    Entity tmxTemp = registry->CreateEntity();
-    tmxTemp.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.8f, 0.8f));
-    tmxTemp.AddComponent<SpriteComponent>("jungle", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
-    tmxTemp.GetComponent<SpriteComponent>().tileLayerIndexes = {0};
+    Entity tmxGround = registry->CreateEntity();
+    tmxGround.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));
+    tmxGround.AddComponent<SpriteComponent>("village", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
+    tmxGround.GetComponent<SpriteComponent>().tileLayerIndexes = {0, 1};
+
+    Entity tmxMisc = registry->CreateEntity();
+    tmxMisc.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));
+    tmxMisc.AddComponent<SpriteComponent>("village", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
+    tmxMisc.GetComponent<SpriteComponent>().tileLayerIndexes = {2, 3};
 
     // Create entities
     Entity tank = registry->CreateEntity();
@@ -112,10 +117,20 @@ void Game::LoadLevel(int level) {
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
     truck.AddComponent<SpriteComponent>("truck-image", 32, 32, LAYER_ENEMIES);
 
-    Entity skyTemp = registry->CreateEntity();
-    skyTemp.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.8f, 0.8f));
-    skyTemp.AddComponent<SpriteComponent>("jungle", 0, 0, LAYER_TILEMAP, 0, 0, SpriteType::TILED);
-    skyTemp.GetComponent<SpriteComponent>().tileLayerIndexes = {1, 2, 3};
+    Entity tmxVase = registry->CreateEntity();
+    tmxVase.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));
+    tmxVase.AddComponent<SpriteComponent>("village", 0, 0, LAYER_OBSTACLES, 0, 0, SpriteType::TILED);
+    tmxVase.GetComponent<SpriteComponent>().tileLayerIndexes = {4};
+
+    Entity tmxHouse = registry->CreateEntity();
+    tmxHouse.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));
+    tmxHouse.AddComponent<SpriteComponent>("village", 0, 0, LAYER_OBSTACLES, 0, 0, SpriteType::TILED);
+    tmxHouse.GetComponent<SpriteComponent>().tileLayerIndexes = {5};
+
+    Entity tmxFrog = registry->CreateEntity();
+    tmxFrog.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));
+    tmxFrog.AddComponent<SpriteComponent>("village", 0, 0, LAYER_ENEMIES, 0, 0, SpriteType::TILED);
+    tmxFrog.GetComponent<SpriteComponent>().tileLayerIndexes = {6};
 }
 
 void Game::Setup() {

@@ -113,9 +113,10 @@ bool MapLayer::create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& m
                     && tileIDs[idx].ID < (ts.getFirstGID() + ts.getTileCount())) {
                     // tex coords
                     auto idIndex = (tileIDs[idx].ID - ts.getFirstGID());
+                    auto flipFlags = tileIDs[idx].flipFlags; // TODO flip tiles
                     float u = static_cast<float>(idIndex % tileCountX);
                     float v = static_cast<float>(idIndex / tileCountX);
-                    u *= mapTileSize.x;  // TODO we should be using the tile set size, as this may
+                    u *= mapTileSize.x;  // TODO use the tile set size, as this may
                                          // be different from the map's grid size
                     v *= mapTileSize.y;
 
