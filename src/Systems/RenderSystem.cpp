@@ -4,6 +4,7 @@
 #include "Components/SpriteComponent.h"
 #include "Components/TransformComponent.h"
 
+#include <iostream>
 #include <SDL.h>
 #include <vector>
 #include <glm/glm.hpp>
@@ -15,9 +16,15 @@ RenderSystem::RenderSystem() {
 }
 
 void RenderSystem::Update(SDL_Renderer* renderer, const std::unique_ptr<AssetStore>& assetStore) {
-    // Loop all entities that the system is interested in
-    for (auto entity : GetSystemEntities()) {
-        // Get components, not modified
+    auto entities = GetSystemEntities();
+
+    // Sort entities by zIndex before rendering
+    std::sort(entities.begin(), entities.end(), [](const Entity& a, const Entity& b) {
+        return a.GetComponent<SpriteComponent>().zIndex < b.GetComponent<SpriteComponent>().zIndex;
+    });
+
+    // Loop all sorted entities that the system is interested in
+    for (auto entity : entities) {
         const auto transform = entity.GetComponent<TransformComponent>();
         const auto sprite = entity.GetComponent<SpriteComponent>();
 
@@ -80,5 +87,4 @@ void RenderSystem::UpdateTiles(SDL_Renderer* renderer, const std::unique_ptr<Ass
                              transform.rotation, NULL, SDL_FLIP_NONE);
         }
     }
-
 }
