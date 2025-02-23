@@ -34,6 +34,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(Lua REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # Add include-what-you-use in Debug mode
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -62,6 +63,7 @@ target_link_libraries(gameengine
         ${LUA_LIBRARIES}
         spdlog::spdlog_header_only
         tmxlite
+        nlohmann_json
 )
 
 # Check if debug mode and variable iwyu_path exists

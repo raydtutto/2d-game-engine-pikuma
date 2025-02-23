@@ -1,14 +1,16 @@
 #include "AssetStore.h"
 
 #include "Logger/Logger.h"
-#include "tiled/MapLayer.h"
-#include "tiled/Texture.h"
+#include "Tiled/MapLayer.h"
+#include "Tiled/Texture.h"
+#include "Aseprite/AsepriteObject.h"
 
 #include <SDL_image.h>
 #include <tmxlite/Layer.hpp>
 #include <tmxlite/TileLayer.hpp>
 
 AssetStore::AssetStore() {
+    AsepriteObject("assets/images/characters/bento/anim.json");
     Logger::Log("AssetStore constructor called.");
 }
 

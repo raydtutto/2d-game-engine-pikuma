@@ -1,5 +1,5 @@
 {
   "dependencies": [
-    "spdlog", "tmxlite"
+    "spdlog", "tmxlite", "nlohmann-json"
   ]
 }
