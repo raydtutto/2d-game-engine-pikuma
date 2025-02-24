@@ -95,6 +95,8 @@ void Game::LoadLevel(int level) {
     assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
     assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
     assetStore->AddTmxFile(renderer, "village", "assets/tilemaps/village/map-village.tmx");
+    // 1. todo add aseprite
+    // 2. todo make assetstore to get data from assets.json
 
     Entity tmxGround = registry->CreateEntity();
     tmxGround.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));

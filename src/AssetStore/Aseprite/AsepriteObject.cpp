@@ -1,8 +1,8 @@
 #include "AsepriteObject.h"
 
+#include <Logger/Logger.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
-#include <Logger/Logger.h>
 
 using json = nlohmann::json;
 
@@ -31,11 +31,12 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
     auto framesArray = data["frames"];
     for (auto item : framesArray) {
         if (!item.is_object()) {
-            Logger::Warning("JSON data isn't valid.");
+            Logger::Warning("JSON data is incorrect.");
             continue;
         }
+
         FrameObject frame;
-        if (!frame.objectFrames.x || !frame.objectFrames.y || !frame.objectFrames.width || !frame.objectFrames.height) {
+        if (!item["frame"].is_object()) {
             Logger::Warning("JSON frame data is incorrect.");
             continue;
         }
@@ -44,7 +45,7 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
         frame.objectFrames.width = item["frame"]["w"].get<int>();
         frame.objectFrames.height = item["frame"]["h"].get<int>();
 
-        if (!frame.spriteSize.first || !frame.spriteSize.second) {
+        if (!item["sourceSize"].is_object()) {
             Logger::Warning("JSON sourceSize data is incorrect.");
             continue;
         }
@@ -60,9 +61,15 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
         frames.push_back(frame);
     }
 
+    // Read animation tags
     for (auto item : meta["frameTags"]) {
         std::string name = item["name"].get<std::string>();
-        // todo check range
+        // Check frame range
+        if (item["from"].get<int>() < 0 || item["from"].get<int>() >= framesArray.size()
+            || item["to"].get<int>() < 0 || item["to"].get<int>() >= framesArray.size()) {
+            Logger::Warning("JSON frame range is incorrect.");
+            continue;
+        }
         frameTags[name] = std::make_pair(item["from"].get<int>(), item["to"].get<int>());
     }
 

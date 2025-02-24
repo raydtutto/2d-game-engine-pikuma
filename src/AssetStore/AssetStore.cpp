@@ -8,9 +8,9 @@
 #include <SDL_image.h>
 #include <tmxlite/Layer.hpp>
 #include <tmxlite/TileLayer.hpp>
+#include <tmxlite/Map.hpp>
 
 AssetStore::AssetStore() {
-    AsepriteObject("assets/images/characters/bento/anim.json");
     Logger::Log("AssetStore constructor called.");
 }
 
