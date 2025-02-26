@@ -75,7 +75,7 @@ bool SaveTextureAsJPG(SDL_Renderer* renderer, SDL_Texture* texture, const std::s
 
 #endif
 
-bool MapLayer::create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& map, std::uint32_t layerIndex,
+bool MapLayer::Create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& map, std::uint32_t layerIndex,
                       const std::vector<std::unique_ptr<Texture>>& textures) {
     const auto& layers = map->getLayers();
     if (layers[layerIndex]->getType() != tmx::Layer::Type::Tile) {
@@ -159,7 +159,7 @@ bool MapLayer::create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& m
     return true;
 }
 
-SDL_Texture* MapLayer::generateTexture(SDL_Renderer* renderer) {
+SDL_Texture* MapLayer::GenerateTexture(SDL_Renderer* renderer) {
     if (!renderer) {
         Logger::Error("Map layer can't render.");
         return nullptr;

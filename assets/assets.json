@@ -1,0 +1,11 @@
+{
+  "textures": {
+    "tank-image": "assets/images/tank-panther-right.png",
+    "truck-image": "assets/images/truck-ford-down.png",
+    "village": "assets/tilemaps/village/map-village.tmx"
+  },
+  "tiles": {},
+  "aseprites": {
+    "hero": "assets/images/characters/bento/anim.json"
+  }
+}

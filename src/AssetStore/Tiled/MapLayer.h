@@ -14,10 +14,10 @@ namespace tiled {
     public:
         explicit MapLayer();
 
-        bool create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& map, std::uint32_t index,
+        bool Create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& map, std::uint32_t index,
                     const std::vector<std::unique_ptr<Texture>>& textures);
 
-        SDL_Texture* generateTexture(SDL_Renderer* renderer);
+        SDL_Texture* GenerateTexture(SDL_Renderer* renderer);
 
     private:
         struct Subset {

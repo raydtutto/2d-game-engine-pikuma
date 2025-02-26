@@ -27,8 +27,7 @@ public:
 
     void AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
     void AddTmxFile(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
-    // todo AddAsepriteObject
-    // call AddTexture with "assets/images/characters/bento/anim.json"
+    void AddAsepriteObject(SDL_Renderer* renderer, const std::string& assetId, const std::string& jsonPath);
     std::vector<SDL_Texture*> GetTmxLayers(const std::string& assetId);
     std::shared_ptr<tmx::Map> GetTmxMap(const std::string& assetId);
     SDL_Texture* GetTexture(const std::string& assetId);

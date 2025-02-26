@@ -1,21 +1,23 @@
 #include "AsepriteObject.h"
 
+#include "AssetStore/AssetStore.h"
+
 #include <Logger/Logger.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
-AsepriteObject::AsepriteObject(const std::string& jsonPath) {
+bool AsepriteObject::load(const std::string& jsonPath) {
     std::ifstream f(jsonPath);
     json data = json::parse(f);
     if (data.is_null() || !data.is_object()) {
         Logger::Error("Json file doesn't exist.");
-        return;
+        return false;
     }
     if (!data["meta"].is_object()) {
         Logger::Error("Meta isn't an object.");
-        return;
+        return false;
     }
 
     // Read meta data
@@ -26,6 +28,8 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
     size.second = meta["size"]["h"].get<int>();
     scale = std::atof(meta["scale"].get<std::string>().c_str());
     imagePath = meta["image"].get<std::string>();
+    if (imagePath.empty())
+        return false;
 
     // Read frames data
     auto framesArray = data["frames"];
@@ -44,18 +48,8 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
         frame.objectFrames.y = item["frame"]["y"].get<int>();
         frame.objectFrames.width = item["frame"]["w"].get<int>();
         frame.objectFrames.height = item["frame"]["h"].get<int>();
-
-        if (!item["sourceSize"].is_object()) {
-            Logger::Warning("JSON sourceSize data is incorrect.");
-            continue;
-        }
         frame.spriteSize.first = item["sourceSize"]["w"].get<int>();
         frame.spriteSize.second = item["sourceSize"]["h"].get<int>();
-
-        if (!frame.frameDuration) {
-            Logger::Warning("JSON duration data is incorrect.");
-            continue;
-        }
         frame.frameDuration = item["duration"].get<int>();
 
         frames.push_back(frame);
@@ -74,4 +68,5 @@ AsepriteObject::AsepriteObject(const std::string& jsonPath) {
     }
 
     Logger::Log("All Aseprite data extracted.");
+    return true;
 }

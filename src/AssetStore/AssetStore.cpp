@@ -37,8 +37,9 @@ void AssetStore::ClearAssets() {
     textures.clear();
     tileMaps.clear();
     tileLayers.clear();
+    asepriteObjects.clear();
 
-    Logger::Log("Textures and tiled objects have been cleared.");
+    Logger::Log("Textures, tiled and Aseprite objects have been cleared.");
 }
 
 void AssetStore::AddTexture(SDL_Renderer* renderer, const std::string& assetId,
@@ -95,12 +96,21 @@ void AssetStore::AddTmxFile(SDL_Renderer* renderer, const std::string& assetId,
         for (auto i = 0u; i < mapLayers.size(); ++i) {
             if (mapLayers[i]->getType() == tmx::Layer::Type::Tile) {
                 renderLayers.emplace_back(std::make_unique<tiled::MapLayer>());
-                if (renderLayers.back()->create(renderer, map, i, textures)) {
-                    tileLayers[assetId].push_back(renderLayers.back()->generateTexture(renderer));
-                }
+                if (renderLayers.back()->Create(renderer, map, i, textures))
+                    tileLayers[assetId].push_back(renderLayers.back()->GenerateTexture(renderer));
             }
         }
     }
+}
+
+void AssetStore::AddAsepriteObject(SDL_Renderer* renderer, const std::string& assetId, const std::string& jsonPath) {
+    auto aseprite = std::make_shared<AsepriteObject>();
+    if (aseprite->load(jsonPath)) {
+        AddTexture(renderer, assetId, aseprite->imagePath);
+        asepriteObjects[assetId] = aseprite;
+    }
+
+    Logger::Log("New Aseprite object added to the Asset Store with id = " + assetId);
 }
 
 std::vector<SDL_Texture*> AssetStore::GetTmxLayers(const std::string& assetId) {

@@ -43,7 +43,8 @@ struct AsepriteObject {
     std::map<std::string, std::pair<int, int>> frameTags; // { "name": "***", "from": 2, "to": 4}
     std::vector<FrameObject> frames;
 
-    AsepriteObject(const std::string& jsonPath);
+    AsepriteObject() {}
+    bool load(const std::string& jsonPath);
 };
 
 #endif  // ASEPRITEOBJECT_H
