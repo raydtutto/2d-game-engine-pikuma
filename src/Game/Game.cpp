@@ -92,10 +92,10 @@ void Game::LoadLevel(int level) {
     registry->AddSystem<RenderSystem>();
 
     // Adding assets to the asset store
-    assetStore->AddTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
-    assetStore->AddTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
-    assetStore->AddTmxFile(renderer, "village", "assets/tilemaps/village/map-village.tmx");
-    assetStore->AddAsepriteObject(renderer, "hero", "assets/images/characters/bento/anim.json");
+    assetStore->LoadTexture(renderer, "tank-image", "assets/images/tank-panther-right.png");
+    assetStore->LoadTexture(renderer, "truck-image", "assets/images/truck-ford-down.png");
+    assetStore->LoadTmxFile(renderer, "village", "assets/tilemaps/village/map-village.tmx");
+    assetStore->LoadAseprite(renderer, "hero", "assets/images/characters/bento/anim.json");
     // 2. todo make assetstore to get data from assets.json
 
     Entity tmxGround = registry->CreateEntity();
@@ -118,6 +118,11 @@ void Game::LoadLevel(int level) {
     truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
     truck.AddComponent<SpriteComponent>("truck-image", 32, 32, LAYER_ENEMIES);
+
+    Entity hero = registry->CreateEntity();
+    hero.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.2, 0.2), 0.0);
+    hero.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
+    hero.AddComponent<SpriteComponent>("hero", 32, 32, LAYER_PLAYER);
 
     Entity tmxVase = registry->CreateEntity();
     tmxVase.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));

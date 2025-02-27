@@ -16,7 +16,7 @@ Texture::~Texture() {
 
 bool Texture::loadFromFile(const std::string& path, SDL_Renderer* renderer) {
     if (!renderer || path.empty()) {
-        Logger::Error("Tiled texture file doesn't exist.");
+        Logger::Error("Tiled texture file doesn't exist: {}", path);
         return false;
     }
 
@@ -39,7 +39,7 @@ bool Texture::loadFromFile(const std::string& path, SDL_Renderer* renderer) {
 
         if (!surface)
         {
-            Logger::Error("Unable to create texture surface.");
+            Logger::Error("Unable to create texture surface: {}", path);
             stbi_image_free(data);
             return false;
         }
@@ -51,7 +51,7 @@ bool Texture::loadFromFile(const std::string& path, SDL_Renderer* renderer) {
 
         if (!m_texture)
         {
-            Logger::Error("Failed to create texture for " + path);
+            Logger::Error("Failed to create texture: {}", path);
             return false;
         }
 

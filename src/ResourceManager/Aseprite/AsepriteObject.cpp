@@ -12,11 +12,11 @@ bool AsepriteObject::Load(const std::string& jsonPath) {
     std::ifstream f(jsonPath);
     json data = json::parse(f);
     if (data.is_null() || !data.is_object()) {
-        Logger::Error("Json file doesn't exist: " + jsonPath);
+        Logger::Error("Json file doesn't exist: {}", jsonPath);
         return false;
     }
     if (!data["meta"].is_object()) {
-        Logger::Error("Meta data is incorrect: " + jsonPath);
+        Logger::Error("Meta data is incorrect: {}", jsonPath);
         return false;
     }
 
@@ -27,7 +27,7 @@ bool AsepriteObject::Load(const std::string& jsonPath) {
     if (!meta.contains("size") || !meta["size"].is_object() || !meta.contains("scale")
         || (!meta["scale"].is_string() && !meta["scale"].is_number()) || !meta.contains("image")
         || !meta["image"].is_string()) {
-        Logger::Error("Aseprite meta data is incorrect: " + jsonPath);
+        Logger::Error("Aseprite meta data is incorrect: {}", jsonPath);
         return false;
     }
     size.first = meta["size"]["w"].get<int>();
@@ -46,12 +46,12 @@ bool AsepriteObject::Load(const std::string& jsonPath) {
     auto framesArray = data["frames"];
     for (auto item : framesArray) {
         if (!item.contains("frame") || !item.contains("sourceSize") || !item.contains("duration")) {
-            Logger::Error("JSON frames data is incorrect: " + jsonPath);
+            Logger::Error("JSON frames data is incorrect: {}", jsonPath);
             return false;
         }
         if (!item["frame"].is_object() || !item["sourceSize"].is_object()
             || !item["duration"].is_number()) {
-            Logger::Warning("JSON frames data is incorrect: " + jsonPath);
+            Logger::Warning("JSON frames data is incorrect: {}", jsonPath);
             continue;
         }
         // Allocate memory
@@ -75,14 +75,14 @@ bool AsepriteObject::Load(const std::string& jsonPath) {
 
     // Read animation tags
     if (!meta.contains("frameTags") || !meta["frameTags"].is_array()) {
-        Logger::Error("JSON does not contain valid frameTags: " + jsonPath);
+        Logger::Error("JSON does not contain valid frameTags: {}", jsonPath);
         return false;
     }
     for (const auto& item : meta["frameTags"]) {
         if (!item.contains("name") || !item["name"].is_string() || !item.contains("from")
             || !item["from"].is_number_integer() || !item.contains("to")
             || !item["to"].is_number_integer()) {
-            Logger::Warning("Invalid frameTag entry in JSON: " + jsonPath);
+            Logger::Warning("Invalid frameTag entry in JSON: {}", jsonPath);
             continue;
         }
         auto name = item["name"].get<std::string>();
@@ -92,12 +92,12 @@ bool AsepriteObject::Load(const std::string& jsonPath) {
         int end = item["to"].get<int>();
         if (start < 0 || start >= static_cast<int>(framesArray.size()) || end < 0
             || end >= static_cast<int>(framesArray.size())) {
-            Logger::Warning("JSON frame range is incorrect: " + jsonPath);
+            Logger::Warning("JSON frame range is incorrect: {}", jsonPath);
             continue;
         }
         frameTags->emplace(name, std::make_pair(start, end));
     }
 
-    Logger::Log("All Aseprite data extracted: " + jsonPath);
+    Logger::Log("All Aseprite data extracted: {}", jsonPath);
     return true;
 }

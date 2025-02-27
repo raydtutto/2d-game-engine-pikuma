@@ -25,12 +25,17 @@ public:
     AssetStore();
     ~AssetStore();
 
-    void AddTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
-    void AddTmxFile(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
-    void AddAsepriteObject(SDL_Renderer* renderer, const std::string& assetId, const std::string& jsonPath);
+    // Load assets
+    void LoadTexture(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
+    void LoadTmxFile(SDL_Renderer* renderer, const std::string& assetId, const std::string& filePath);
+    void LoadAseprite(SDL_Renderer* renderer, const std::string& assetId, const std::string& jsonPath);
+
+    // Get assets
+    SDL_Texture* GetTexture(const std::string& assetId);
     std::vector<SDL_Texture*> GetTmxLayers(const std::string& assetId);
     std::shared_ptr<tmx::Map> GetTmxMap(const std::string& assetId);
-    SDL_Texture* GetTexture(const std::string& assetId);
+    std::shared_ptr<AsepriteObject> GetAsepriteObject(const std::string& assetId);
+
 
 private:
     void ClearAssets();
