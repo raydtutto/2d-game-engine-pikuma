@@ -105,7 +105,7 @@ void AssetStore::AddTmxFile(SDL_Renderer* renderer, const std::string& assetId,
 
 void AssetStore::AddAsepriteObject(SDL_Renderer* renderer, const std::string& assetId, const std::string& jsonPath) {
     auto aseprite = std::make_shared<AsepriteObject>();
-    if (aseprite->load(jsonPath)) {
+    if (aseprite->Load(jsonPath)) {
         // Get image path
         const std::string basePath = jsonPath.substr(0, jsonPath.find_last_of("/\\"));
         const std::string imagePath = basePath + "/" + aseprite->imageName;

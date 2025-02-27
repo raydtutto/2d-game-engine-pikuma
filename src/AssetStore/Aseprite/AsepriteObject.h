@@ -30,9 +30,14 @@ struct FrameData {
 
 // Stores frame data
 struct FrameObject {
-    FrameData objectFrames;
+    std::shared_ptr<FrameData> objectFrames;
     std::pair<int, int> spriteSize;
     int frameDuration;
+
+    FrameObject()
+        : objectFrames(std::make_shared<FrameData>())
+        , spriteSize({ 0, 0 })
+        , frameDuration(0) {}
 };
 
 // Stores Aseprite json data
@@ -40,11 +45,17 @@ struct AsepriteObject {
     std::pair<int, int> size;
     float scale;
     std::string imageName;
-    std::map<std::string, std::pair<int, int>> frameTags; // { "name": "***", "from": 2, "to": 4}
-    std::vector<FrameObject> frames;
+    std::shared_ptr<std::map<std::string, std::pair<int, int>>> frameTags;  // { "name": "***",
+                                                                            // "from": 2, "to": 4}
+    std::vector<std::shared_ptr<FrameObject>> frames;
 
-    AsepriteObject() {}
-    bool load(const std::string& jsonPath);
+    AsepriteObject()
+        : size{ 0, 0 }
+        , scale(1.0f)
+        , frameTags(std::make_shared<std::map<std::string, std::pair<int, int>>>()) {
+    }
+
+    bool Load(const std::string& jsonPath);
 };
 
 #endif  // ASEPRITEOBJECT_H

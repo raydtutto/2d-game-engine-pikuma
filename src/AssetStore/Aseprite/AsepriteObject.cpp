@@ -8,7 +8,7 @@
 
 using json = nlohmann::json;
 
-bool AsepriteObject::load(const std::string& jsonPath) {
+bool AsepriteObject::Load(const std::string& jsonPath) {
     std::ifstream f(jsonPath);
     json data = json::parse(f);
     if (data.is_null() || !data.is_object()) {
@@ -45,15 +45,15 @@ bool AsepriteObject::load(const std::string& jsonPath) {
             Logger::Warning("JSON frames data is incorrect.");
             continue;
         }
-        frame.objectFrames.x = item["frame"]["x"].get<int>();
-        frame.objectFrames.y = item["frame"]["y"].get<int>();
-        frame.objectFrames.width = item["frame"]["w"].get<int>();
-        frame.objectFrames.height = item["frame"]["h"].get<int>();
+        frame.objectFrames->x = item["frame"]["x"].get<int>();
+        frame.objectFrames->y = item["frame"]["y"].get<int>();
+        frame.objectFrames->width = item["frame"]["w"].get<int>();
+        frame.objectFrames->height = item["frame"]["h"].get<int>();
         frame.spriteSize.first = item["sourceSize"]["w"].get<int>();
         frame.spriteSize.second = item["sourceSize"]["h"].get<int>();
         frame.frameDuration = item["duration"].get<int>();
 
-        frames.push_back(frame);
+        frames.push_back(std::make_shared<FrameObject>(frame));
     }
 
     // Read animation tags
@@ -65,7 +65,7 @@ bool AsepriteObject::load(const std::string& jsonPath) {
             Logger::Warning("JSON frame range is incorrect.");
             continue;
         }
-        frameTags[name] = std::make_pair(item["from"].get<int>(), item["to"].get<int>());
+        frameTags->emplace(name, std::make_pair(item["from"].get<int>(), item["to"].get<int>()));
     }
 
     Logger::Log("All Aseprite data extracted.");
