@@ -39,7 +39,7 @@ struct FrameObject {
 struct AsepriteObject {
     std::pair<int, int> size;
     float scale;
-    std::string imagePath;
+    std::string imageName;
     std::map<std::string, std::pair<int, int>> frameTags; // { "name": "***", "from": 2, "to": 4}
     std::vector<FrameObject> frames;
 

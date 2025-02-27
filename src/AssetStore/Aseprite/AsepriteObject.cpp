@@ -24,24 +24,25 @@ bool AsepriteObject::load(const std::string& jsonPath) {
     auto meta = data["meta"];
     Logger::Log("Aseprite json opened.");
 
+    if (!meta.contains("size") || !meta.contains("scale") || !meta.contains("image")) {
+        Logger::Error("Aseprite meta data is incorrect");
+        return false;
+    }
     size.first = meta["size"]["w"].get<int>();
     size.second = meta["size"]["h"].get<int>();
     scale = std::atof(meta["scale"].get<std::string>().c_str());
-    imagePath = meta["image"].get<std::string>();
-    if (imagePath.empty())
-        return false;
+    imageName = meta["image"].get<std::string>();
 
     // Read frames data
     auto framesArray = data["frames"];
     for (auto item : framesArray) {
         if (!item.is_object()) {
-            Logger::Warning("JSON data is incorrect.");
-            continue;
+            Logger::Warning("JSON frames data is incorrect.");
+            return false;
         }
-
         FrameObject frame;
-        if (!item["frame"].is_object()) {
-            Logger::Warning("JSON frame data is incorrect.");
+        if (!item.contains("frame") || !item.contains("sourceSize") || !item.contains("duration")) {
+            Logger::Warning("JSON frames data is incorrect.");
             continue;
         }
         frame.objectFrames.x = item["frame"]["x"].get<int>();

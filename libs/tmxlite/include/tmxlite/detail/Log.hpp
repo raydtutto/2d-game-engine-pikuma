@@ -27,6 +27,8 @@ source distribution.
 
 //flexible logging class, based on code at https://github.com/fallahn/xygine
 
+// TODO: use spdlog
+
 #ifndef TMXLITE_LOGGER_HPP_
 #define TMXLITE_LOGGER_HPP_
 
