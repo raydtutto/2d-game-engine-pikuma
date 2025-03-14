@@ -7,6 +7,7 @@
 
 // TODO: Create one header file for systems
 #include "AssetStore/AssetStore.h"
+#include "Components/AnimationComponent.h"
 #include "ECS/ECS.h"
 #include "Logger/Logger.h"
 #include "Systems/MovementSystem.h"

@@ -1,9 +1,9 @@
 #include "AssetStore.h"
 
 #include "Logger/Logger.h"
-#include "ResourceManager/Tiled/MapLayer.h"
-#include "ResourceManager/Tiled/Texture.h"
-#include "ResourceManager/Aseprite/AsepriteObject.h"
+#include "Tiled/MapLayer.h"
+#include "Tiled/Texture.h"
+#include "Aseprite/AsepriteObject.h"
 
 #include <SDL_image.h>
 #include <tmxlite/Layer.hpp>

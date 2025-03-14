@@ -4,11 +4,10 @@
 #include "Components/SpriteComponent.h"
 #include "Components/TransformComponent.h"
 
-#include <iostream>
 #include <SDL.h>
-#include <vector>
 #include <glm/glm.hpp>
 #include <tmxlite/Map.hpp>
+#include <vector>
 
 RenderSystem::RenderSystem() {
     RequireComponent<SpriteComponent>();

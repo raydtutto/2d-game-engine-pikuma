@@ -335,8 +335,8 @@ bool Registry::HasComponent(Entity entity) const {
     const auto componentId = Component<TComponent>::GetId();
     const auto entityId = entity.GetId();
 
-    Logger::Log("Entity id " + std::to_string(entityId)
-                + " has a component id = " + std::to_string(componentId));
+    // Logger::Log("Entity id " + std::to_string(entityId)
+    //             + " has a component id = " + std::to_string(componentId));
 
     // Return the component state
     return entityComponentSignatures[entityId].test(componentId);
