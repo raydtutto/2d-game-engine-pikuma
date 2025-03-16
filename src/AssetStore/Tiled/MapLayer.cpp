@@ -1,6 +1,6 @@
 #include "MapLayer.h"
 
-#include "Logger/Logger.h"
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 #include <tmxlite/TileLayer.hpp>
@@ -79,7 +79,7 @@ bool MapLayer::Create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& m
                       const std::vector<std::unique_ptr<Texture>>& textures) {
     const auto& layers = map->getLayers();
     if (layers[layerIndex]->getType() != tmx::Layer::Type::Tile) {
-        Logger::Error("Invalid map layer.");
+        spdlog::error("Invalid map layer.");
         return false;
     }
 
@@ -161,11 +161,11 @@ bool MapLayer::Create(SDL_Renderer* renderer, const std::shared_ptr<tmx::Map>& m
 
 SDL_Texture* MapLayer::GenerateTexture(SDL_Renderer* renderer) {
     if (!renderer) {
-        Logger::Error("Map layer can't render.");
+        spdlog::error("Map layer can't render.");
         return nullptr;
     }
     if (m_subsets.empty()) {
-        Logger::Error("Map layer doesn't exist.");
+        spdlog::error("Map layer doesn't exist.");
         return nullptr;
     }
 
@@ -173,7 +173,7 @@ SDL_Texture* MapLayer::GenerateTexture(SDL_Renderer* renderer) {
     SDL_Texture* finalTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
                                                   SDL_TEXTUREACCESS_TARGET, m_size.x, m_size.y);
     if (!finalTexture) {
-        Logger::Error("Failed to create texture.");
+        spdlog::error("Failed to create texture.");
         return nullptr;
     }
 

@@ -1,6 +1,6 @@
 #include "ECS.h"
 
-#include "Logger/Logger.h"
+#include <spdlog/spdlog.h>
 #include <algorithm>
 
 // Initializes static methods from header
@@ -44,7 +44,7 @@ Entity Registry::CreateEntity() {
     if (entityId >= entityComponentSignatures.size())
         entityComponentSignatures.resize(entityId + 1);
 
-    Logger::Log("Entity created with id: {}", std::to_string(entityId));
+    spdlog::info("Entity created with id: {}", std::to_string(entityId));
     return entity;
 }
 

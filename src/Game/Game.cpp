@@ -9,7 +9,6 @@
 #include "AssetStore/AssetStore.h"
 #include "Components/AnimationComponent.h"
 #include "ECS/ECS.h"
-#include "Logger/Logger.h"
 #include "Systems/MovementSystem.h"
 #include "Systems/RenderSystem.h"
 
@@ -25,17 +24,17 @@ Game::Game() {
     registry = std::make_unique<Registry>();
     assetStore = std::make_unique<AssetStore>();
 
-    Logger::Log("Game constructor called.");
+    spdlog::info("Game constructor called.");
 }
 
 Game::~Game() {
-    Logger::Log("Game destructor called.");
+    spdlog::info("Game destructor called.");
 }
 
 void Game::Initialize() {
     // Avoid SDL error
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        Logger::Error("Error initializing SDL.");
+        spdlog::error("Error initializing SDL.");
         return;
     }
 
@@ -52,7 +51,7 @@ void Game::Initialize() {
                               windowHeight, SDL_WINDOW_BORDERLESS);
     // Check window
     if (!window) {
-        Logger::Error("Error creating SDL window.");
+        spdlog::error("Error creating SDL window.");
         return;
     }
     // ---- Fake fullscreen - END ----------------------------------------------------------------
@@ -61,7 +60,7 @@ void Game::Initialize() {
     renderer = SDL_CreateRenderer(window, -1, 0 | SDL_RENDERER_PRESENTVSYNC);
     // `-1` means "get the default" display number in this case, `0` - for no flags
     if (!renderer) {
-        Logger::Error("Error creating SDL renderer.");
+        spdlog::error("Error creating SDL renderer.");
         return;
     }
 
@@ -115,15 +114,20 @@ void Game::LoadLevel(int level) {
     tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
     tank.AddComponent<SpriteComponent>("tank-image", 32, 32, LAYER_PLAYER);
 
+    Entity hero = registry->CreateEntity();
+    tank.AddComponent<TransformComponent>(glm::vec2(10.0, 10.0), glm::vec2(1.0, 1.0), 0.0);
+    tank.AddComponent<RigidBodyComponent>(glm::vec2(40.0, 0.0));
+    tank.AddComponent<SpriteComponent>("hero", 32, 32, LAYER_PLAYER);
+
     Entity truck = registry->CreateEntity();
     truck.AddComponent<TransformComponent>(glm::vec2(50.0, 100.0), glm::vec2(1.0, 1.0), 0.0);
     truck.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 50.0));
     truck.AddComponent<SpriteComponent>("truck-image", 32, 32, LAYER_ENEMIES);
 
-    Entity hero = registry->CreateEntity();
-    hero.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.2, 0.2), 0.0);
-    hero.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
-    hero.AddComponent<SpriteComponent>("hero", 32, 32, LAYER_PLAYER);
+    // Entity hero = registry->CreateEntity();
+    // hero.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(0.2, 0.2), 0.0);
+    // hero.AddComponent<RigidBodyComponent>(glm::vec2(0.0, 0.0));
+    // hero.AddComponent<SpriteComponent>("hero", 32, 32, LAYER_PLAYER);
 
     Entity tmxVase = registry->CreateEntity();
     tmxVase.AddComponent<TransformComponent>(glm::vec2(0, 0), glm::vec2(2.0f, 2.0f));

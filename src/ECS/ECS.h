@@ -1,7 +1,7 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include <Logger/Logger.h>
+#include <spdlog/spdlog.h>
 #include <bitset>
 #include <memory>
 #include <set>
@@ -189,11 +189,11 @@ class Registry {
 
 public:
     Registry() {
-        Logger::Log("Registry constructor called.");
+        spdlog::info("Registry constructor called.");
     }
 
     ~Registry() {
-        Logger::Log("Registry destructor called.");
+        spdlog::info("Registry destructor called.");
     }
 
     void Update();
@@ -312,7 +312,7 @@ void Registry::AddComponent(Entity entity, TArgs&&... args) {
     // Enable the bitset signature
     entityComponentSignatures[entityId].set(componentId);
 
-    Logger::Log("Component id = " + std::to_string(componentId) + " was added to entity id "
+    spdlog::info("Component id = " + std::to_string(componentId) + " was added to entity id "
                 + std::to_string(entityId));
 }
 
@@ -325,7 +325,7 @@ void Registry::RemoveComponent(Entity entity) {
     // Disable the bitset signature
     entityComponentSignatures[entityId].set(componentId, false);
 
-    Logger::Log("Component id = " + std::to_string(componentId) + " was removed from entity id "
+    spdlog::info("Component id = " + std::to_string(componentId) + " was removed from entity id "
                 + std::to_string(entityId));
 }
 

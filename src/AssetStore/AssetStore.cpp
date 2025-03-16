@@ -1,6 +1,6 @@
 #include "AssetStore.h"
 
-#include "Logger/Logger.h"
+#include <spdlog/spdlog.h>
 #include "Tiled/MapLayer.h"
 #include "Tiled/Texture.h"
 #include "Aseprite/AsepriteObject.h"
@@ -11,12 +11,12 @@
 #include <tmxlite/Map.hpp>
 
 AssetStore::AssetStore() {
-    Logger::Log("AssetStore constructor called.");
+    spdlog::info("AssetStore constructor called.");
 }
 
 AssetStore::~AssetStore() {
     ClearAssets();
-    Logger::Log("AssetStore destructor called.");
+    spdlog::info("AssetStore destructor called.");
 }
 
 void AssetStore::ClearAssets() {
@@ -39,7 +39,7 @@ void AssetStore::ClearAssets() {
     tileLayers.clear();
     asepriteObjects.clear();
 
-    Logger::Log("Textures, tiled and Aseprite objects have been cleared.");
+    spdlog::info("Textures, tiled and Aseprite objects have been cleared.");
 }
 
 void AssetStore::LoadTexture(SDL_Renderer* renderer, const std::string& assetId,
@@ -48,7 +48,7 @@ void AssetStore::LoadTexture(SDL_Renderer* renderer, const std::string& assetId,
     SDL_Surface* surface = IMG_Load(filePath.c_str());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!surface || !texture) {
-        Logger::Error("Failed to load image: {}", filePath);
+        spdlog::error("Failed to load image: {}", filePath);
         return;
     }
     SDL_FreeSurface(surface);
@@ -56,13 +56,13 @@ void AssetStore::LoadTexture(SDL_Renderer* renderer, const std::string& assetId,
     // Add the texture to the map
     textures.emplace(assetId, texture);  // emplace(key, value)
 
-    Logger::Log("New texture added to the Asset Store with id: {}", assetId);
+    spdlog::info("New texture added to the Asset Store with id: {}", assetId);
 }
 
 void AssetStore::LoadTmxFile(SDL_Renderer* renderer, const std::string& assetId,
                             const std::string& filePath) {
     if (filePath.empty()) {
-        Logger::Error("Tileset doesn't exist: {}", filePath);
+        spdlog::error("Tileset doesn't exist: {}", filePath);
         return;
     }
 
@@ -77,7 +77,7 @@ void AssetStore::LoadTmxFile(SDL_Renderer* renderer, const std::string& assetId,
         tileMaps[assetId] = map;
         tileLayers[assetId] = {};  // Initialize vector
 
-        Logger::Log("Tile map loaded: {}", assetId);
+        spdlog::info("Tile map loaded: {}", assetId);
         // Generate texture
         std::vector<std::unique_ptr<tiled::Texture>> textures;
         std::vector<std::unique_ptr<tiled::MapLayer>> renderLayers;
@@ -88,7 +88,7 @@ void AssetStore::LoadTmxFile(SDL_Renderer* renderer, const std::string& assetId,
         for (const auto& ts : tileSets) {
             textures.emplace_back(std::make_unique<tiled::Texture>());
             if (!textures.back()->loadFromFile(ts.getImagePath(), renderer))
-                Logger::Error("Failed opening: {} ", ts.getImagePath());
+                spdlog::error("Failed opening: {} ", ts.getImagePath());
         }
 
         // load the layers
@@ -115,13 +115,13 @@ void AssetStore::LoadAseprite(SDL_Renderer* renderer, const std::string& assetId
         asepriteObjects[assetId] = aseprite;
     }
 
-    Logger::Log("New Aseprite object added to the Asset Store with id: {}", assetId);
+    spdlog::info("New Aseprite object added to the Asset Store with id: {}", assetId);
 }
 
 std::vector<SDL_Texture*> AssetStore::GetTmxLayers(const std::string& assetId) {
     auto item = tileLayers.find(assetId);
     if (item == tileLayers.end()) {
-        Logger::Error("Can't find TMX layer with assetId: {}", assetId);
+        spdlog::error("Can't find TMX layer with assetId: {}", assetId);
         return {};
     }
     return item->second;
@@ -130,7 +130,7 @@ std::vector<SDL_Texture*> AssetStore::GetTmxLayers(const std::string& assetId) {
 std::shared_ptr<tmx::Map> AssetStore::GetTmxMap(const std::string& assetId) {
     auto item = tileMaps.find(assetId);
     if (item == tileMaps.end()) {
-        Logger::Error("Can't find tilemap with assetId: {}", assetId);
+        spdlog::error("Can't find tilemap with assetId: {}", assetId);
         return nullptr;
     }
     return item->second;
@@ -139,7 +139,7 @@ std::shared_ptr<tmx::Map> AssetStore::GetTmxMap(const std::string& assetId) {
 SDL_Texture* AssetStore::GetTexture(const std::string& assetId) {
     auto item = textures.find(assetId);
     if (item == textures.end()) {
-        Logger::Error("Can't find texture with assetId: {}", assetId);
+        spdlog::error("Can't find texture with assetId: {}", assetId);
         return nullptr;
     }
     return item->second;
@@ -148,7 +148,7 @@ SDL_Texture* AssetStore::GetTexture(const std::string& assetId) {
 std::shared_ptr<AsepriteObject> AssetStore::GetAsepriteObject(const std::string& assetId)  {
     auto item = asepriteObjects.find(assetId);
     if (item == asepriteObjects.end()) {
-        Logger::Error("Can't find Aseprite object with assetId: {}", assetId);
+        spdlog::error("Can't find Aseprite object with assetId: {}", assetId);
         return nullptr;
     }
     return item->second;
